@@ -45,6 +45,9 @@ public class Autonomous1 extends LinearOpMode {
     NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
     robot.vuforia = new VuforiaSkystone1920();
     integrationOfAxis imuUpdater = new integrationOfAxis();
+    liftThing doLiftPickup = new liftThing(true);
+    liftThing doLiftReturn = new liftThing(false);
+
     robot.resetEncoderWheels();
 
       robot.vuforia.initialize(robot);
@@ -70,41 +73,86 @@ public class Autonomous1 extends LinearOpMode {
       //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 16);
 
       robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 20);
-      robot.turnRobotAutonomous(90, 0, turnPID);
+      robot.turnRobotAutonomous(85, 0, turnPID);
       sleep(500);
     CameraDevice.getInstance().setFlashTorchMode(false);
 
     switch(robot.getBlockSwitchCase(robot.vuforia.blockXValue, 0.5)){
           case 1: // Right Block
-            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 4.5);
+
+
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 3);
             robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
             robot.turnRobotAutonomous(90, 0, turnPID);
 //
-            robot.intake(true, false, 0.73);
-            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 8.5);
+            robot.intake(true, false, 0.5);
+            robot.autoMechanumDriveTime(turnPID, false, 0.5, 0,90, 1);
             robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 5);
-            robot.intake(false, false, 0.73);
+            sleep(800);
+            robot.intake(false, false, 0.5);
 //
-            robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 20);
-            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 72);
+            robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
+
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 28);
+            doLiftPickup.start();
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 32.5);
+
             robot.turnRobotAutonomous(180, 0, turnPID);
-//
-            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 10);
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 11);
 
 
+            robot.leftDragServo.setPosition(.7);
+            robot.rightDragServo.setPosition(.2);
+            sleep((500));
+            robot.gripServo.setPosition(.76);
+
+            sleep(1000);
+
+            doLiftReturn.start();
+
+            robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 20, 29);
+
+
+            robot.leftDragServo.setPosition(0.1);
+            robot.rightDragServo.setPosition(1);
+
+            robot.autoMechanumDriveTime(turnPID, false, 1, -90,165, 4);
 
 
 
             break;
           case 2: // Middle Block
 
+            robot.leftDragServo.setPosition(.7);
+            robot.rightDragServo.setPosition(.15);
+
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.8, 0, 0, 20);
+            robot.turnRobotAutonomous(-90, 0, turnPID);
+
+            robot.leftDragServo.setPosition(0.1);
+            robot.rightDragServo.setPosition(1);
               break;
 
 
           case 3: // Left Block
 
+            doLiftPickup.start();
+
+            sleep(30000);
+            robot.leftDragServo.setPosition(.7);
+            robot.rightDragServo.setPosition(.15);
+
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.8, 0, 0, 20);
+            robot.turnRobotAutonomous(-90, 0, turnPID);
+
+            robot.leftDragServo.setPosition(0.1);
+            robot.rightDragServo.setPosition(1);
               break;
       }
+
+      doLiftPickup.interrupt();
+      doLiftReturn.interrupt();
+      integrationOfAxis.interrupted();
 
       //robot.autoStrafeDistanceSensor(turnPID, -1, -90, 0, 0);
       //robot.autoStrafe(turnPID, 1, 0, 180, 2);
@@ -164,7 +212,7 @@ public class Autonomous1 extends LinearOpMode {
   {
     public integrationOfAxis()
     {
-      this.setName("DriveThread");
+      this.setName("integratedZAxisThread");
     }
 
 
@@ -178,6 +226,56 @@ public class Autonomous1 extends LinearOpMode {
         robot.getIntegratedZAxis();
         robot.callAllTelemetry(); // Do not call telem.update at ALL. It'll freak out.
 
+        idle();
+      }
+    }
+  }
+
+
+  private class liftThing extends Thread
+  {
+    boolean pickupFlag = false;
+    public liftThing(boolean pickup)
+    {
+      pickupFlag = pickup;
+      this.setName("liftThingThread");
+    }
+
+
+    @Override
+    public void run()
+    {
+      boolean thing = true;
+
+      while (!isInterrupted())
+      {
+        if(pickupFlag && thing) {
+          robot.automatedPickUpTele(thing, 350);
+          try {
+            Thread.sleep(500);
+          } catch(InterruptedException e) {
+            System.out.println("got interrupted!: " + e);
+          }
+          robot.flip(true, false, .45);
+          try {
+            Thread.sleep(700);
+          } catch(InterruptedException e) {
+            System.out.println("got interrupted!: " + e);
+          }
+          robot.flip(false, false, .45);
+          thing = false;
+        }else if(!pickupFlag && thing){
+          robot.flipMotor.setPower(-0.45);
+          try {
+            Thread.sleep(700);
+          } catch(InterruptedException e) {
+            System.out.println("got interrupted!: " + e);
+          }
+          robot.flipMotor.setPower(0);
+
+          robot.automatedCarriageReturnTele(thing, 0);
+          thing = false;
+        }
         idle();
       }
     }

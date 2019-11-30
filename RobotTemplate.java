@@ -351,8 +351,8 @@ public double tempAngleVar = 0;
 
 
     if(autoOpMethods.gamepad1.y){
-      leftDragServo.setPosition(.7);
-      rightDragServo.setPosition(.15);
+      leftDragServo.setPosition(.5);
+      rightDragServo.setPosition(.5);
 
     }else{
       leftDragServo.setPosition(0.1);
@@ -372,7 +372,7 @@ public double tempAngleVar = 0;
                 double z = (angleOfRobot % 360) * Math.PI / 180; // This gives me a value between 0 and 2pi which is linear to the angle of the robot.
                 double magnitude = power;
                 double robotAngle = ((-thetaOfTravel)*Math.PI)/180;
-                double rightX = turnRobotTeleop( thetaOfRotation - startAngle, pidObject, 2.5, 1);
+                double rightX = turnRobotTeleopShush( thetaOfRotation - startAngle, pidObject, 2.5, 1);
 
                 frontLeftMotorPower = magnitude * Math.cos(robotAngle - z) + (rightX * 2);
                 frontRightMotorPower = magnitude * Math.sin(robotAngle - z) - (rightX * 2);
@@ -383,7 +383,7 @@ public double tempAngleVar = 0;
 
                 double magnitude = power; // Trig magic
                 double robotAngle = ((-thetaOfTravel-90)*Math.PI)/180 - Math.PI / 4; // More trigonometry Magic
-                double rightX = turnRobotTeleop(thetaOfRotation, pidObject, 1, 0.5);
+                double rightX = turnRobotTeleopShush(thetaOfRotation, pidObject, 1, 0.5);
 
                 final double frontLeft = magnitude * Math.cos(robotAngle) + (rightX );
                 final double frontRight = magnitude * Math.sin(robotAngle) - (rightX );
