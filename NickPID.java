@@ -29,6 +29,31 @@ public class NickPID{
         calcFlag1 = true;
     }
 
+    public double basicPIDReturnShush(double targetAngle, double kP, double kI, double kD, boolean telemetryOption){
+        double error = targetAngle + robot.integratedZAxis;
+        error = -error;
+        robot.errorTemp = error;
+        this.P = error;
+        this.I += (error*.02);
+        this.D = (error - this.previousError);
+
+        double output = (kP * this.P) + (kI * this.I) + (kD*this.D);
+
+        if(telemetryOption){
+            robot.autoOpMethods.telemetry.addData(this.getClass().getName() + "PID Error: ", error);
+        }
+
+        if(I > 50){
+            I=50;
+        }
+
+        if(output > 100){
+            output = 100;
+        }
+
+        this.previousError = error;
+        return output;
+    }
     public double basicPIDReturn(double targetAngle, double kP, double kI, double kD, boolean telemetryOption){
         double error = -targetAngle - robot.integratedZAxis;
         robot.errorTemp = error;

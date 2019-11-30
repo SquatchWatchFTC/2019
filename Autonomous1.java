@@ -67,28 +67,45 @@ public class Autonomous1 extends LinearOpMode {
     waitForStart();
 
     //robot.autoStrafeDistanceSensor(turnPID, 1, 90, 0, 16);
-      robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "right", 16);
-      robot.turnRobotAutonomous(0, 0, turnPID);
+      //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 16);
 
-      sleep(2000);
-      switch(robot.getBlockSwitchCase(robot.vuforia.blockXValue, 1)){
-          case 1:
-                robot.autoStrafeTime(turnPID, 1, 0,0,3);
+      robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 20);
+      robot.turnRobotAutonomous(90, 0, turnPID);
+      sleep(500);
+    CameraDevice.getInstance().setFlashTorchMode(false);
+
+    switch(robot.getBlockSwitchCase(robot.vuforia.blockXValue, 0.5)){
+          case 1: // Right Block
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 4.5);
+            robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
+            robot.turnRobotAutonomous(90, 0, turnPID);
+//
+            robot.intake(true, false, 0.73);
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 8.5);
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 5);
+            robot.intake(false, false, 0.73);
+//
+            robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 20);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 72);
+            robot.turnRobotAutonomous(180, 0, turnPID);
+//
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 10);
+
+
+
+
+
+            break;
+          case 2: // Middle Block
+
               break;
-          case 2:
-              robot.autoStrafeTime(turnPID, 1, -90,0,3);
-
-              break;
 
 
-          case 3:
-              robot.autoStrafeTime(turnPID, 1, 180,0,3);
-
+          case 3: // Left Block
 
               break;
       }
 
-      CameraDevice.getInstance().setFlashTorchMode(false);
       //robot.autoStrafeDistanceSensor(turnPID, -1, -90, 0, 0);
       //robot.autoStrafe(turnPID, 1, 0, 180, 2);
       //robot.autoStrafe(turnPID, 1, -180, 0, 1);
