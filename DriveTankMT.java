@@ -36,6 +36,7 @@ public class DriveTankMT extends LinearOpMode
         // create an instance of the DriveThread.
         robot = new RobotTemplate(this);
         robot.autoInit();
+        robot.resetEncoderWheels();
         
         Thread  intakeAndLift = new intakeAndLift();
         NickPID turnPID = new NickPID(robot);
@@ -63,8 +64,11 @@ public class DriveTankMT extends LinearOpMode
             {
                 robot.getIntegratedZAxis();
                 robot.autoOpMethods.telemetry.addData("integratedZAxis: ", robot.integratedZAxis);
-          //      robot.autoOpMethods.telemetry.addData("leftEnc: ", robot.leftFront.getCurrentPosition());
-          //      robot.autoOpMethods.telemetry.addData("rightEnc: ", robot.rightFront.getCurrentPosition());
+                robot.autoOpMethods.telemetry.addData("leftBack: ", robot.backLeftDistanceSensor.getDistance(DistanceUnit.INCH));
+                robot.autoOpMethods.telemetry.addData("rightBack: ", robot.backRightDistanceSensor.getDistance(DistanceUnit.INCH));
+
+//                robot.autoOpMethods.telemetry.addData("leftEnc: ", robot.leftFront.getCurrentPosition());
+//                robot.autoOpMethods.telemetry.addData("rightEnc: ", robot.rightFront.getCurrentPosition());
                 robot.autoOpMethods.telemetry.update();
                 robot.robotDriveFunctions(turnPID);
                 idle();

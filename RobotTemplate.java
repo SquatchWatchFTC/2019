@@ -84,6 +84,7 @@ public class RobotTemplate {
     Servo gripServo;
     Servo leftDragServo;
     Servo rightDragServo;
+    Servo capstoneServo;
 
     int oldInt = 0;
     public int tempInt = 0;
@@ -166,6 +167,8 @@ int targetPosition = 0;
         leftDragServo = autoOpMethods.hardwareMap.servo.get("F2");
         rightDragServo = autoOpMethods.hardwareMap.servo.get("F1");
 
+        capstoneServo = autoOpMethods.hardwareMap.servo.get("capstoneServo");
+
     }
 
     //and this is for when teleop gives "this"
@@ -221,6 +224,7 @@ int targetPosition = 0;
         leftDragServo = teleOpMethods.hardwareMap.servo.get("F2");
         rightDragServo = teleOpMethods.hardwareMap.servo.get("F1");
 
+        capstoneServo = teleOpMethods.hardwareMap.servo.get("capstoneServo");
 
     }
 
@@ -351,8 +355,8 @@ public double tempAngleVar = 0;
 
 
     if(autoOpMethods.gamepad1.y){
-      leftDragServo.setPosition(.5);
-      rightDragServo.setPosition(.5);
+      leftDragServo.setPosition(.7);
+      rightDragServo.setPosition(.2);
 
     }else{
       leftDragServo.setPosition(0.1);
@@ -677,6 +681,12 @@ public double tempAngleVar = 0;
         }
         gripServo.setPosition(gripServoPos);
         }
+
+        if(autoOpMethods.gamepad1.b){
+            capstoneServo.setPosition(1);
+        }else{
+            capstoneServo.setPosition(0);
+        }
     }
 
 
@@ -780,7 +790,9 @@ public double tempAngleVar = 0;
     public void turnRobotAutonomous(int targetAngle, int sleepTime, NickPID pidObject){ // This is an absolute position system. If you say 90 over and over, it'll not move. If you do 90, 180, 270, etc. itll move around in 90 degree increments
         while(Math.abs(errorTemp) > 3 && autoOpMethods.opModeIsActive()){
             getIntegratedZAxis();
-            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3,0.05,5.5,false)/100);
+//            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,4,0.05,6,false)/100);
+            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3.5,0.05,8,false)/100);
+
         }
         turnRobotPower(0);
         pidObject.resetValues();
@@ -806,12 +818,12 @@ public double tempAngleVar = 0;
     double tempDouble1 = 0;
     public void callAllTelemetry(){
         if(true) {
-            autoOpMethods.telemetry.addData("Current Error: ", errorTemp);
-            autoOpMethods.telemetry.addData("Average of both: ", Math.abs(((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2))/2);
+            //autoOpMethods.telemetry.addData("Current Error: ", errorTemp);
+           // autoOpMethods.telemetry.addData("Average of both: ", Math.abs(((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2))/2);
 
-            autoOpMethods.telemetry.addData("inches to wall: ", getWallDistanceInches());
-            autoOpMethods.telemetry.addData("Back left and right sensors: ", "{Backleft, BackRight} = %.0f, %.0f", backLeftDistanceSensor.getDistance(DistanceUnit.INCH), backRightDistanceSensor.getDistance(DistanceUnit.INCH) );
-            autoOpMethods.telemetry.addData("Value Shush: ", tempDouble1);
+            //autoOpMethods.telemetry.addData("inches to wall: ", getWallDistanceInches());
+            //autoOpMethods.telemetry.addData("Back left and right sensors: ", "{Backleft, BackRight} = %.0f, %.0f", backLeftDistanceSensor.getDistance(DistanceUnit.INCH), backRightDistanceSensor.getDistance(DistanceUnit.INCH) );
+            //autoOpMethods.telemetry.addData("Value Shush: ", tempDouble1);
 
         }
         //imu.getGravity();
@@ -896,7 +908,10 @@ public double tempAngleVar = 0;
         double distanceSensorValue = getWallDistanceInches();
         double error = distanceSensorValue - distanceInches;
 
-        double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.1, 0.08, 1.75, false);
+        double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.1, 0.85, 1.75, false);
+        //double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.1, 1.0, 1.75, false);
+
+
 
         if(r > 1){
             r =1;
@@ -920,7 +935,8 @@ public double tempAngleVar = 0;
             // Just the value of the x-axis of the right stick.
             double rightX = turnRobotTeleopShush(-startAngle, pidObject, 2.5, 1);
 
-            driftOffset = basicPIDReturnGeneral((((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2)/2), startingEncoder, 0.6, 0.08, 1.75, false);
+//            driftOffset = basicPIDReturnGeneral((((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2)/2), startingEncoder, 0.6, 0.08, 1.75, false);
+            driftOffset = basicPIDReturnGeneral((((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2)/2), startingEncoder, 0.6, 1.0, 1.75, false);
 
             if(driftOffset > 1){
                 driftOffset =1;
@@ -938,6 +954,11 @@ public double tempAngleVar = 0;
             rearLeftMotorPower = rearLeft;
             rearRightMotorPower = rearRight;
 
+            autoOpMethods.telemetry.addData("front L: ", frontLeftMotorPower);
+            autoOpMethods.telemetry.addData("front R: ", frontRightMotorPower);
+            autoOpMethods.telemetry.addData("rear L: ", rearLeftMotorPower);
+            autoOpMethods.telemetry.addData("rear R: ", rearRightMotorPower);
+
             assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
         }
         pidObject.resetValues();
@@ -949,7 +970,10 @@ public double tempAngleVar = 0;
         double distanceSensorValue = getWallDistanceInches();
         double error = distanceSensorValue - distanceInches;
 
-        double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.6, 0.08, 1.75, false)*power;
+        //double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.6, 0.08, 1.75, false)*power;
+
+        double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.6, 1, 1.75, false)*power;
+
 
         if(r > 1){
             r =1;
@@ -1053,6 +1077,16 @@ public double tempAngleVar = 0;
         } else {
             flipMotor.setPower(0);
         }
+    }
+
+    public void backupToPlate(double inchesAway, double power){
+        while (backLeftDistanceSensor.getDistance(DistanceUnit.INCH) > inchesAway && autoOpMethods.opModeIsActive()){
+            leftFront.setPower(power);
+            rightFront.setPower(power);
+            leftRear.setPower(power);
+            rightRear.setPower(power);
+        }
+        stopDriveMotors();
     }
 
     public void automatedPickUpTele( boolean button, int newPosition){

@@ -21,14 +21,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.internal.tfod.Timer;
 
 
-@Autonomous(name = "Autonomous 1", group = "test")
+@Autonomous(name = "Autonomous 1.21", group = "test")
 //@Disabled
 public class Autonomous1 extends LinearOpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
   private RobotTemplate robot;
+
+  private double timeout;
 
 
 
@@ -73,7 +76,7 @@ public class Autonomous1 extends LinearOpMode {
       //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 16);
 
       robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 20);
-      robot.turnRobotAutonomous(85, 0, turnPID);
+      robot.turnRobotAutonomous(90, 0, turnPID);
       sleep(500);
     CameraDevice.getInstance().setFlashTorchMode(false);
 
@@ -81,24 +84,38 @@ public class Autonomous1 extends LinearOpMode {
           case 1: // Right Block
 
 
-            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 3);
-            robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 4);
+            robot.turnRobotAutonomous(5, 0, turnPID);
+            robot.turnRobotAutonomous(0, 0, turnPID);
+
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24);
+
+
+            //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
+            robot.turnRobotAutonomous(-45, 0, turnPID);
+
             robot.turnRobotAutonomous(90, 0, turnPID);
 //
-            robot.intake(true, false, 0.5);
+
+            robot.intake(true, false, 0.73);
             robot.autoMechanumDriveTime(turnPID, false, 0.5, 0,90, 1);
-            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 5);
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 4);
             sleep(800);
             robot.intake(false, false, 0.5);
 //
-            robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
+            robot.turnRobotAutonomous(45, 0, turnPID);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+            robot.turnRobotAutonomous(85, 0, turnPID);
+
+            //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
 
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 28);
             doLiftPickup.start();
-            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 32.5);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
 
-            robot.turnRobotAutonomous(180, 0, turnPID);
-            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 11);
+            robot.turnRobotAutonomous(170, 0, turnPID);
+            robot.backupToPlate(2, .5);
+            //robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 11);
 
 
             robot.leftDragServo.setPosition(.7);
@@ -109,33 +126,113 @@ public class Autonomous1 extends LinearOpMode {
             sleep(1000);
 
             doLiftReturn.start();
+            /*
+            while (robot.autoOpMethods.opModeIsActive() && runtime.milliseconds() < 28500) {
+              robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 20, 28.25);
+            }
 
-            robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 20, 29);
+             */
+
+            robot.autoMechanumDriveTime(turnPID, false, 1, 0,180, 2);
 
 
             robot.leftDragServo.setPosition(0.1);
             robot.rightDragServo.setPosition(1);
 
-            robot.autoMechanumDriveTime(turnPID, false, 1, -90,165, 4);
+            //robot.autoMechanumDriveTime(turnPID, false, 1, -90,180, 4);
+            robot.autoMechanumDriveTime(turnPID, false, 1, -90,180, 1);
+            robot.autoMechanumDriveTime(turnPID, false, 1, -85,90, 3);
+
+
+
+
 
 
 
             break;
           case 2: // Middle Block
+            telemetry.addLine("case 2");
+            robot.autoMechanumDriveEncoder(turnPID, false, .65, 0, 0, 11);
 
-            robot.leftDragServo.setPosition(.7);
-            robot.rightDragServo.setPosition(.15);
+            robot.turnRobotAutonomous(5, 0, turnPID);
+            robot.turnRobotAutonomous(0, 0, turnPID);
 
-            robot.autoMechanumDriveEncoder(turnPID, false, 0.8, 0, 0, 20);
-            robot.turnRobotAutonomous(-90, 0, turnPID);
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24.5);
 
-            robot.leftDragServo.setPosition(0.1);
-            robot.rightDragServo.setPosition(1);
-              break;
+            robot.turnRobotAutonomous(-55, 0, turnPID);
+            robot.turnRobotAutonomous(90, 0, turnPID);
+
+            robot.intake(true, false, 0.73);
+            robot.autoMechanumDriveTime(turnPID, false, 0.5, 0,90, 1);
+            robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 2.75);
+            sleep(800);
+            robot.intake(false, false, 0.5);
+
+            robot.turnRobotAutonomous(45, 0, turnPID);robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+            robot.turnRobotAutonomous(90, 0, turnPID);
+
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 44);
+            doLiftPickup.start();
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+
+            robot.turnRobotAutonomous(180, 0, turnPID);
+            robot.backupToPlate(2, .5);
+
+
+            if(true){
+              robot.leftDragServo.setPosition(.7);
+              robot.rightDragServo.setPosition(.2);
+
+            }else{
+              robot.leftDragServo.setPosition(0.1);
+              robot.rightDragServo.setPosition(1);
+            }
+            sleep((500));
+            robot.gripServo.setPosition(.76);
+
+            sleep(1000);
+
+
+            doLiftReturn.start();
+
+            robot.autoMechanumDriveTime(turnPID, false, 1, 0,180, 1.0);
+            double startTime = time;
+            while((time <  startTime + 2) && (robot.integratedZAxis < -90)){
+              robot.turnRobotPower(1);
+            }
+            robot.turnRobotPower(0);
+            if(false){
+              robot.leftDragServo.setPosition(.7);
+              robot.rightDragServo.setPosition(.2);
+
+            }else{
+              robot.leftDragServo.setPosition(0.1);
+              robot.rightDragServo.setPosition(1);
+            }
+          robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, 1.0);
+
+
+
+          robot.autoMechanumDriveTime(turnPID, false, 1, 0,90, 2.0);
+
+
+
+
+          break;
 
 
           case 3: // Left Block
+            robot.turnRobotAutonomous(180, 0, turnPID);
 
+
+
+
+
+            while(true && opModeIsActive()){
+              telemetry.addData("IntegratedZ: ", robot.integratedZAxis);
+              telemetry.update();
+            }
+          sleep(30000);
             doLiftPickup.start();
 
             sleep(30000);
@@ -152,9 +249,10 @@ public class Autonomous1 extends LinearOpMode {
 
       doLiftPickup.interrupt();
       doLiftReturn.interrupt();
-      integrationOfAxis.interrupted();
+    imuUpdater.interrupt();
 
-      //robot.autoStrafeDistanceSensor(turnPID, -1, -90, 0, 0);
+
+    //robot.autoStrafeDistanceSensor(turnPID, -1, -90, 0, 0);
       //robot.autoStrafe(turnPID, 1, 0, 180, 2);
       //robot.autoStrafe(turnPID, 1, -180, 0, 1);
 
@@ -195,14 +293,10 @@ public class Autonomous1 extends LinearOpMode {
 
 
 
-    while(true&&opModeIsActive()){
-        robot.tempDouble1 = robot.vuforia.blockXValue;
 
-    }
 
 
     // REMEMBER TO SHUT DOWN ALL THREADS
-    imuUpdater.interrupt();
   }
 
 
