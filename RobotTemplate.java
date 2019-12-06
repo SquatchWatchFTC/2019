@@ -538,6 +538,67 @@ public double tempAngleVar = 0;
         assignMotorPowers(0, 0, 0, 0);
     }
 
+    public void autoMechanumDriveEncoderRed(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double inches){
+        double startAngle = integratedZAxis;
+        double averageEncoder = 0;
+        while(Math.abs(averageEncoder) < Math.abs(inches) && autoOpMethods.opModeIsActive()) {
+            averageEncoder = ((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2)/2;
+            if (fieldCentric) { // Field-Centric-Mecanum
+
+                double angleOfRobot = integratedZAxis;
+
+
+                double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.6, 0.08, 2, true);
+
+                if(magnitude > 1){
+                    magnitude =1;
+                }
+                if(magnitude < -1){
+                    magnitude = -1;
+                }
+
+                magnitude = magnitude * power;
+                double robotAngle = ((-thetaOfTravel)*Math.PI)/180;
+                double rightX = turnRobotTeleopShush( -(thetaOfRotation + startAngle), pidObject, 2.5, 1);
+
+
+
+                frontLeftMotorPower = magnitude * Math.cos(robotAngle) + (rightX * 2);
+                frontRightMotorPower = magnitude * Math.sin(robotAngle) - (rightX * 2);
+                rearLeftMotorPower = magnitude * Math.sin(robotAngle) + (rightX * 2);
+                rearRightMotorPower = magnitude * Math.cos(robotAngle) - (rightX * 2);
+
+            } else if (!fieldCentric) { // Robot-Centric Mecanum
+
+                double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.3, 0.08, 2, true); // Trig magic
+                if(magnitude > 1){
+                    magnitude =1;
+                }
+                if(magnitude < -1){
+                    magnitude = -1;
+                }
+                magnitude = magnitude * power;
+
+                double robotAngle = ((-thetaOfTravel-90)*Math.PI)/180 - Math.PI / 4; // More trigonometry Magic
+                double rightX = turnRobotTeleopShush(-(thetaOfRotation + startAngle), pidObject, 1, 0.5);
+
+                final double frontLeft = magnitude * Math.cos(robotAngle) + (rightX );
+                final double frontRight = magnitude * Math.sin(robotAngle) - (rightX );
+                final double rearLeft = magnitude * Math.sin(robotAngle) + (rightX );
+                final double rearRight = magnitude * Math.cos(robotAngle) - (rightX );
+
+                frontLeftMotorPower = frontLeft;
+                frontRightMotorPower = frontRight;
+                rearLeftMotorPower = rearLeft;
+                rearRightMotorPower = rearRight;
+
+            }
+            assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
+        }
+        pidObject.resetValues();
+        resetEncoderWheels();
+        assignMotorPowers(0, 0, 0, 0);
+    }
     public void autoMechanumDriveBackLeftSensor(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double inches){
         double startAngle = integratedZAxis;
         double sensorValue = backLeftDistanceSensor.getDistance(DistanceUnit.INCH);
@@ -792,6 +853,19 @@ public double tempAngleVar = 0;
             getIntegratedZAxis();
 //            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,4,0.05,6,false)/100);
             turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3.5,0.05,8,false)/100);
+
+        }
+        turnRobotPower(0);
+        pidObject.resetValues();
+        resetEncoderWheels();
+        sleep(sleepTime);
+        errorTemp = 100;
+    }
+    public void turnRobotAutonomousRed(int targetAngle, int sleepTime, NickPID pidObject){ // This is an absolute position system. If you say 90 over and over, it'll not move. If you do 90, 180, 270, etc. itll move around in 90 degree increments
+        while(Math.abs(errorTemp) > 3 && autoOpMethods.opModeIsActive()){
+            getIntegratedZAxis();
+//            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,4,0.05,6,false)/100);
+            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3.8,0.075,8,false)/100);
 
         }
         turnRobotPower(0);
@@ -1079,8 +1153,9 @@ public double tempAngleVar = 0;
         }
     }
 
-    public void backupToPlate(double inchesAway, double power){
-        while (backLeftDistanceSensor.getDistance(DistanceUnit.INCH) > inchesAway && autoOpMethods.opModeIsActive()){
+    public void backupToPlate(double inchesAway, double power, double timeSeconds){
+        double startTime = autoOpMethods.time;
+        while ((backLeftDistanceSensor.getDistance(DistanceUnit.INCH) > inchesAway) && (autoOpMethods.time < startTime + timeSeconds) && autoOpMethods.opModeIsActive()){
             leftFront.setPower(power);
             rightFront.setPower(power);
             leftRear.setPower(power);
@@ -1088,6 +1163,8 @@ public double tempAngleVar = 0;
         }
         stopDriveMotors();
     }
+
+
 
     public void automatedPickUpTele( boolean button, int newPosition){
         if(button) {
