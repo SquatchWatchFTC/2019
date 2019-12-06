@@ -70,7 +70,7 @@ public class DriveTankMT extends LinearOpMode
 //                robot.autoOpMethods.telemetry.addData("leftEnc: ", robot.leftFront.getCurrentPosition());
 //                robot.autoOpMethods.telemetry.addData("rightEnc: ", robot.rightFront.getCurrentPosition());
                 robot.autoOpMethods.telemetry.update();
-                robot.robotDriveFunctions(turnPID);
+                robot.robotDriveFunctions(turnPID, gamepad1.x);
                 idle();
             }
 

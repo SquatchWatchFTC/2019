@@ -85,7 +85,7 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 telemetry.addLine("pos 3");
 
 
-                robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 15);
+                robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 15.5);
                 robot.turnRobotAutonomousRed(5, 0, turnPID);
                 robot.turnRobotAutonomousRed(0, 0, turnPID);
 
@@ -105,8 +105,9 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.intake(false, false, 0.5); // intake stuff
 //
                 robot.turnRobotAutonomousRed(-30, 0, turnPID);
-                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
-                robot.turnRobotAutonomousRed(-90, 0, turnPID); // Rotate and drive to go under bridge
+                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
+                robot.turnRobotAutonomousRed(-95, 0, turnPID); // Rotate and drive to go under bridge
+                robot.turnRobotAutonomousRed(-95, 0, turnPID); // Rotate and drive to go under bridge
 
                 //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
 
@@ -197,12 +198,12 @@ public class RedFullAutonomous1 extends LinearOpMode {
             case 2: // Middle Block
                 telemetry.addLine("case 2");
 
-                //robot.autoMechanumDriveEncoderRed(turnPID, false, -.5, 0, 0, 0.5);
+                robot.autoMechanumDriveEncoderRed(turnPID, false, -.3, 0, 0, 1);
 
                 robot.turnRobotAutonomousRed(5, 0, turnPID);
                 robot.turnRobotAutonomousRed(0, 0, turnPID);
 
-                robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24.5);
+                robot.autoMechanumDriveEncoder(turnPID, false, .45, 0, 0, 24.5);
 
                 robot.turnRobotAutonomousRed(75, 0, turnPID);
                 robot.turnRobotAutonomousRed(-90, 0, turnPID);
@@ -214,8 +215,10 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.intake(false, false, 0.5);
 
                 robot.turnRobotAutonomousRed(-30, 0, turnPID);
-                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
-                robot.turnRobotAutonomousRed(-90, 0, turnPID);
+                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
+                robot.turnRobotAutonomousRed(-95, 0, turnPID);
+                robot.turnRobotAutonomousRed(-95, 0, turnPID);
+
 
                 robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 44);
                 doLiftPickup.start();
@@ -295,7 +298,8 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.intake(false, false, 0.5);
 //
                 robot.turnRobotAutonomousRed(-30, 0, turnPID);
-                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
+                robot.turnRobotAutonomousRed(-95, 0, turnPID);
                 robot.turnRobotAutonomousRed(-95, 0, turnPID);
 
                 //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);

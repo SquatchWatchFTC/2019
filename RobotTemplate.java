@@ -246,30 +246,36 @@ int targetPosition = 0;
 
 public double tempAngleVar = 0;
 
-    public void robotDriveFunctions(NickPID pidObject){
+    public void robotDriveFunctions(NickPID pidObject, boolean slow){
         
-    if((autoOpMethods.gamepad1.right_trigger > 0.5)&& autoOpMethods.gamepad1.left_bumper) { // Field-Centric-Mecanum
-      double angleOfRobot = integratedZAxis;
+    if(true) { // Field-Centric-Mecanum
 
-
-      double z = (angleOfRobot%360)*Math.PI/180; // This gives me a value between 0 and 2pi which is linear to the angle of the robot.
-
-      float leftStickX = autoOpMethods.gamepad1.left_stick_x;
-      float leftStickY = autoOpMethods.gamepad1.left_stick_y;
-      float rightStickX = autoOpMethods.gamepad1.right_stick_x;
-
-      double magnitude = Math.hypot(leftStickX, leftStickY); // Trig magic
-      double robotAngle = Math.atan2(leftStickY, -leftStickX) - Math.PI / 4; // More trigonometry Magic
-        tempAngleVar += rightStickX*5;
+        double r = Math.hypot(autoOpMethods.gamepad1.left_stick_x, autoOpMethods.gamepad1.left_stick_y); // Trig magic
+        double robotAngle = Math.atan2(autoOpMethods.gamepad1.left_stick_y, -autoOpMethods.gamepad1.left_stick_x) - Math.PI / 4; // More trigonometry Magic
+        autoOpMethods.telemetry.addData("atan thing: ", robotAngle);
+        float rightStickX = autoOpMethods.gamepad1.right_stick_x;
+        tempAngleVar += rightStickX*11;
         // Just the value of the x-axis of the right stick.
-        double rightX = turnRobotTeleop(tempAngleVar, pidObject, 1.5, 1);
+        double rightX = turnRobotTeleop(tempAngleVar, pidObject, 1.9, 1.1);
 
-      frontLeftMotorPower = magnitude * Math.cos(robotAngle-z)+(rightX*2);
-      frontRightMotorPower = magnitude * Math.sin(robotAngle-z)-(rightX*2);
-      rearLeftMotorPower = magnitude * Math.sin(robotAngle-z)+(rightX*2);
-      rearRightMotorPower = magnitude * Math.cos(robotAngle-z)-(rightX*2);
+        final double frontLeft = r * Math.cos(robotAngle)+(rightX);
+        final double frontRight = r * Math.sin(robotAngle)-(rightX);
+        final double rearLeft = r * Math.sin(robotAngle)+(rightX);
+        final double rearRight = r * Math.cos(robotAngle)-(rightX);
+        if(slow){
+            frontLeftMotorPower = frontLeft/2;
+            frontRightMotorPower = frontRight/2;
+            rearLeftMotorPower = rearLeft/2;
+            rearRightMotorPower = rearRight/2;
+        }else {
+            frontLeftMotorPower = frontLeft;
+            frontRightMotorPower = frontRight;
+            rearLeftMotorPower = rearLeft;
+            rearRightMotorPower = rearRight;
+        }
 
-    }else if(autoOpMethods.gamepad1.right_trigger > 0.5) { // Slow Field Centric Mecanum
+    }
+    /*else if(autoOpMethods.gamepad1.right_trigger > 0.5) { // Slow Field Centric Mecanum
       double angleOfRobot = integratedZAxis;
 
       double z = (angleOfRobot%360)*Math.PI/180; // This gives me a value between 0 and 2pi which is linear to the angle of the robot.
@@ -345,6 +351,9 @@ public double tempAngleVar = 0;
       frontRightMotorPower = deadZoneReturner(autoOpMethods.gamepad1.right_stick_y)/2;
       rearRightMotorPower = deadZoneReturner(autoOpMethods.gamepad1.right_stick_y)/2;
     }
+
+     */
+
     assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
 
     intake(autoOpMethods.gamepad2.a, autoOpMethods.gamepad2.y, 0.73); // A is take in and Y is push out
@@ -354,7 +363,7 @@ public double tempAngleVar = 0;
    
 
 
-    if(autoOpMethods.gamepad1.y){
+    if(autoOpMethods.gamepad1.a){
       leftDragServo.setPosition(.7);
       rightDragServo.setPosition(.2);
 
@@ -595,9 +604,9 @@ public double tempAngleVar = 0;
             }
             assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
         }
+        assignMotorPowers(0, 0, 0, 0);
         pidObject.resetValues();
         resetEncoderWheels();
-        assignMotorPowers(0, 0, 0, 0);
     }
     public void autoMechanumDriveBackLeftSensor(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double inches){
         double startAngle = integratedZAxis;
@@ -717,7 +726,7 @@ public double tempAngleVar = 0;
         if(autoOpMethods.gamepad2.left_stick_button) {
             automatedPickUpTele(autoOpMethods.gamepad2.left_stick_button, 550); // Button and Distance to travel
         }else if(autoOpMethods.gamepad2.right_stick_button) {
-            automatedCarriageReturnTele(autoOpMethods.gamepad2.right_stick_button, 75); // Button and safety limit in encoder counts
+            automatedCarriageReturnTele(autoOpMethods.gamepad2.right_stick_button, 0); // Button and safety limit in encoder counts
         }
 
         liftMoveUp(autoOpMethods.gamepad2.dpad_up, autoOpMethods.gamepad2.dpad_down); // Moves up and down
@@ -904,6 +913,8 @@ public double tempAngleVar = 0;
 
 
         //autoOpMethods.telemetry.addData("Accel: ", accel.xAccel);
+        autoOpMethods.telemetry.addData("Back Left Sensor", backLeftDistanceSensor.getDistance(DistanceUnit.INCH));
+        autoOpMethods.telemetry.addData("Back Right Sensor", backRightDistanceSensor.getDistance(DistanceUnit.INCH));
         autoOpMethods.telemetry.update();
     }
 
@@ -1154,12 +1165,27 @@ public double tempAngleVar = 0;
     }
 
     public void backupToPlate(double inchesAway, double power, double timeSeconds){
+
+
         double startTime = autoOpMethods.time;
-        while ((backLeftDistanceSensor.getDistance(DistanceUnit.INCH) > inchesAway) && (autoOpMethods.time < startTime + timeSeconds) && autoOpMethods.opModeIsActive()){
+
+        double DistanceSensorValue = 0;
+        if(backLeftDistanceSensor.getDistance(DistanceUnit.INCH) < 100){
+            DistanceSensorValue = backLeftDistanceSensor.getDistance(DistanceUnit.INCH);
+        }else if(backRightDistanceSensor.getDistance(DistanceUnit.INCH) < 100){
+            DistanceSensorValue = backRightDistanceSensor.getDistance(DistanceUnit.INCH);
+        }else{
+            DistanceSensorValue = 10;
+            timeSeconds = 1;
+        }
+
+        while ((DistanceSensorValue > inchesAway) && (autoOpMethods.time < startTime + timeSeconds) && autoOpMethods.opModeIsActive()){
             leftFront.setPower(power);
             rightFront.setPower(power);
             leftRear.setPower(power);
             rightRear.setPower(power);
+
+
         }
         stopDriveMotors();
     }

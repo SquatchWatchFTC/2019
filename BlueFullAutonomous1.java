@@ -88,11 +88,11 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.turnRobotAutonomous(5, 0, turnPID);
             robot.turnRobotAutonomous(0, 0, turnPID);
 
-            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24);
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23);
 
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
-            robot.turnRobotAutonomous(-55, 0, turnPID);
+            robot.turnRobotAutonomous(-75, 0, turnPID);
 
             robot.turnRobotAutonomous(90, 0, turnPID);
 //
@@ -104,17 +104,17 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.intake(false, false, 0.5);
 //
             robot.turnRobotAutonomous(30, 0, turnPID);
-            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
             robot.turnRobotAutonomous(90, 0, turnPID);
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
 
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 28);
             doLiftPickup.start();
-            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 24);
 
             robot.turnRobotAutonomous(180, 0, turnPID);
-            robot.backupToPlate(2, .5, 1.75);
+            robot.backupToPlate(2, .5, 0.65);
 
 
             if(true){
@@ -198,9 +198,9 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.turnRobotAutonomous(5, 0, turnPID);
             robot.turnRobotAutonomous(0, 0, turnPID);
 
-            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24.5);
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23.5);
 
-            robot.turnRobotAutonomous(-55, 0, turnPID);
+            robot.turnRobotAutonomous(-75, 0, turnPID);
             robot.turnRobotAutonomous(90, 0, turnPID);
 
             robot.intake(true, false, 0.73);
@@ -209,7 +209,8 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             sleep(800);
             robot.intake(false, false, 0.5);
 
-            robot.turnRobotAutonomous(45, 0, turnPID);robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+            robot.turnRobotAutonomous(45, 0, turnPID);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 15.5);
             robot.turnRobotAutonomous(90, 0, turnPID);
 
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 44);
@@ -217,7 +218,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
 
             robot.turnRobotAutonomous(180, 0, turnPID);
-            robot.backupToPlate(2, .5, 1.75);
+            robot.backupToPlate(2, .5, .65);
 
 
             if(true){
@@ -271,11 +272,11 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.turnRobotAutonomous(5, 0, turnPID);
             robot.turnRobotAutonomous(0, 0, turnPID);
 
-            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24);
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23);
 
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
-            robot.turnRobotAutonomous(-45, 0, turnPID);
+            robot.turnRobotAutonomous(-75, 0, turnPID);
 
             robot.turnRobotAutonomous(90, 0, turnPID);
 //
@@ -287,7 +288,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.intake(false, false, 0.5);
 //
             robot.turnRobotAutonomous(30, 0, turnPID);
-            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
             robot.turnRobotAutonomous(90, 0, turnPID);
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
@@ -297,7 +298,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 28);
 
             robot.turnRobotAutonomous(180, 0, turnPID);
-            robot.backupToPlate(2, .5, 1.75);
+            robot.backupToPlate(2, .5, 0.75);
 
 
             if(true){
