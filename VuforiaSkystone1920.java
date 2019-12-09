@@ -74,7 +74,6 @@ public class VuforiaSkystone1920 {
 
 	public double blockXValue = 0;
 
-
 	public void initialize(RobotTemplate robot){
 		int cameraMonitorViewId = robot.autoOpMethods.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", robot.autoOpMethods.hardwareMap.appContext.getPackageName());
 		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);

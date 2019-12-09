@@ -31,10 +31,6 @@ public class RedBuildPlate extends LinearOpMode {
 	private ElapsedTime runtime = new ElapsedTime();
 	private RobotTemplate robot;
 
-
-
-
-
 	@Override
 		public void runOpMode(){
 			robot = new RobotTemplate(this);
@@ -43,20 +39,15 @@ public class RedBuildPlate extends LinearOpMode {
 
 			robot.autoInit();
 
-
 			NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
 			integrationOfAxis imuUpdater = new integrationOfAxis();
 
-
 			robot.resetEncoderWheels();
-
 
 			imuUpdater.start();
 
-
 			telemetry.addData("Robot Status:", "Initialized.");
 			telemetry.update();
-
 
 			waitForStart();
 
@@ -79,10 +70,7 @@ public class RedBuildPlate extends LinearOpMode {
 			}
 			sleep((500));
 
-
 			sleep(1000);
-
-
 
 			robot.autoMechanumDriveTime(turnPID, false, 1, 0,0, 1);
 			double case1time = time;
@@ -101,20 +89,12 @@ public class RedBuildPlate extends LinearOpMode {
 			}
 			robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
 
-
-
 			robot.autoMechanumDriveTime(turnPID, false, 1, 0,90, 1.3);
 
 			robot.autoMechanumDriveTime(turnPID, false, 1, -90, 90, 2);
 
-
-
 			imuUpdater.interrupt();
-
 		}
-
-
-
 
 	private class integrationOfAxis extends Thread
 	{
@@ -122,7 +102,6 @@ public class RedBuildPlate extends LinearOpMode {
 		{
 			this.setName("integratedZAxisThread");
 		}
-
 
 		@Override
 			public void run()
@@ -137,7 +116,6 @@ public class RedBuildPlate extends LinearOpMode {
 			}
 	}
 
-
 	private class liftThing extends Thread
 	{
 		boolean pickupFlag = false;
@@ -147,12 +125,10 @@ public class RedBuildPlate extends LinearOpMode {
 			this.setName("liftThingThread");
 		}
 
-
 		@Override
 			public void run()
 			{
 				boolean thing = true;
-
 				while (!isInterrupted())
 				{
 					if(pickupFlag && thing) {
@@ -186,6 +162,4 @@ public class RedBuildPlate extends LinearOpMode {
 				}
 			}
 	}
-
-
 }

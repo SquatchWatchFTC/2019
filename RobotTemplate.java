@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.AnalogSensor;
 
-
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -65,7 +64,6 @@ public class RobotTemplate {
 
 	Acceleration accel;
 
-
 	public int initialLiftEncoderCount = 0;
 	public double initialGyro = 0;
 
@@ -109,6 +107,7 @@ public class RobotTemplate {
 	LinearOpMode autoOpMethods;
 	OpMode teleOpMethods;
 	/* I'd like a */ Double Cheeseburger; /* with some lettuce and some */ long frenchfries;
+
 	//this is for when autonomous gives "this"
 	public RobotTemplate(LinearOpMode mode){
 		autoOpMethods = mode;
@@ -168,7 +167,6 @@ public class RobotTemplate {
 		rightDragServo = autoOpMethods.hardwareMap.servo.get("F1");
 
 		capstoneServo = autoOpMethods.hardwareMap.servo.get("capstoneServo");
-
 	}
 
 	//and this is for when teleop gives "this"
@@ -225,9 +223,7 @@ public class RobotTemplate {
 		rightDragServo = teleOpMethods.hardwareMap.servo.get("F1");
 
 		capstoneServo = teleOpMethods.hardwareMap.servo.get("capstoneServo");
-
 	}
-
 
 	//Specific init stuff for autonomous or teleop can go here, if it can't be done before start
 	public void autoInit(){
@@ -273,8 +269,10 @@ public class RobotTemplate {
 				rearLeftMotorPower = rearLeft;
 				rearRightMotorPower = rearRight;
 			}
-
 		}
+
+		//dear god do something about these giant blocks of comments - Jacob
+
 		/*else if(autoOpMethods.gamepad1.right_trigger > 0.5) { // Slow Field Centric Mecanum
 		  double angleOfRobot = integratedZAxis;
 
@@ -350,27 +348,20 @@ public class RobotTemplate {
 
 		frontRightMotorPower = deadZoneReturner(autoOpMethods.gamepad1.right_stick_y)/2;
 		rearRightMotorPower = deadZoneReturner(autoOpMethods.gamepad1.right_stick_y)/2;
-	}
-
-	*/
+		}
+		*/
 
 		assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
 
-	intake(autoOpMethods.gamepad2.a, autoOpMethods.gamepad2.y, 0.73); // A is take in and Y is push out
+		intake(autoOpMethods.gamepad2.a, autoOpMethods.gamepad2.y, 0.73); // A is take in and Y is push out
 
-
-
-
-
-
-	if(autoOpMethods.gamepad1.a){
-		leftDragServo.setPosition(.7);
-		rightDragServo.setPosition(.2);
-
-	}else{
-		leftDragServo.setPosition(0.1);
-		rightDragServo.setPosition(1);
-	}
+		if(autoOpMethods.gamepad1.a){
+			leftDragServo.setPosition(.7);
+			rightDragServo.setPosition(.2);
+		}else{
+			leftDragServo.setPosition(0.1);
+			rightDragServo.setPosition(1);
+		}
 	}
 
 	public void autoMechanumDriveTime(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double timeSeconds){
@@ -381,7 +372,6 @@ public class RobotTemplate {
 
 				double angleOfRobot = integratedZAxis;
 
-
 				double z = (angleOfRobot % 360) * Math.PI / 180; // This gives me a value between 0 and 2pi which is linear to the angle of the robot.
 				double magnitude = power;
 				double robotAngle = ((-thetaOfTravel)*Math.PI)/180;
@@ -391,9 +381,7 @@ public class RobotTemplate {
 				frontRightMotorPower = magnitude * Math.sin(robotAngle - z) - (rightX * 2);
 				rearLeftMotorPower = magnitude * Math.sin(robotAngle - z) + (rightX * 2);
 				rearRightMotorPower = magnitude * Math.cos(robotAngle - z) - (rightX * 2);
-
 			} else if (!fieldCentric) { // Robot-Centric Mecanum
-
 				double magnitude = power; // Trig magic
 				double robotAngle = ((-thetaOfTravel-90)*Math.PI)/180 - Math.PI / 4; // More trigonometry Magic
 				double rightX = turnRobotTeleopShush(thetaOfRotation, pidObject, 1, 0.5);
@@ -407,7 +395,6 @@ public class RobotTemplate {
 				frontRightMotorPower = frontRight;
 				rearLeftMotorPower = rearLeft;
 				rearRightMotorPower = rearRight;
-
 			}
 			assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
 		}
@@ -420,9 +407,7 @@ public class RobotTemplate {
 		double startAngle = integratedZAxis;
 		while(autoOpMethods.time < differenceTime && autoOpMethods.opModeIsActive()) {
 			if (fieldCentric) { // Field-Centric-Mecanum
-
 				double angleOfRobot = integratedZAxis;
-
 
 				double z = (angleOfRobot % 360) * Math.PI / 180; // This gives me a value between 0 and 2pi which is linear to the angle of the robot.
 				double magnitude = power;
@@ -433,9 +418,7 @@ public class RobotTemplate {
 				frontRightMotorPower = magnitude * Math.sin(robotAngle - z) - (rightX * 2);
 				rearLeftMotorPower = magnitude * Math.sin(robotAngle - z) + (rightX * 2);
 				rearRightMotorPower = magnitude * Math.cos(robotAngle - z) - (rightX * 2);
-
 			} else if (!fieldCentric) { // Robot-Centric Mecanum
-
 				double magnitude = power; // Trig magic
 				double robotAngle = ((-thetaOfTravel-90)*Math.PI)/180 - Math.PI / 4; // More trigonometry Magic
 				double rightX = turnRobotTeleop(thetaOfRotation, pidObject, 1, 0.5);
@@ -449,7 +432,6 @@ public class RobotTemplate {
 				frontRightMotorPower = frontRight;
 				rearLeftMotorPower = rearLeft;
 				rearRightMotorPower = rearRight;
-
 			}
 			assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
 		}
@@ -494,7 +476,6 @@ public class RobotTemplate {
 
 				double angleOfRobot = integratedZAxis;
 
-
 				double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.6, 0.08, 1.75, true);
 
 				if(magnitude > 1){
@@ -508,15 +489,12 @@ public class RobotTemplate {
 				double robotAngle = ((-thetaOfTravel)*Math.PI)/180;
 				double rightX = turnRobotTeleopShush( -(thetaOfRotation + startAngle), pidObject, 2.5, 1);
 
-
-
 				frontLeftMotorPower = magnitude * Math.cos(robotAngle) + (rightX * 2);
 				frontRightMotorPower = magnitude * Math.sin(robotAngle) - (rightX * 2);
 				rearLeftMotorPower = magnitude * Math.sin(robotAngle) + (rightX * 2);
 				rearRightMotorPower = magnitude * Math.cos(robotAngle) - (rightX * 2);
 
 			} else if (!fieldCentric) { // Robot-Centric Mecanum
-
 				double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.25, 0.00, 1, true); // Trig magic
 				if(magnitude > 1){
 					magnitude =1;
@@ -538,7 +516,6 @@ public class RobotTemplate {
 				frontRightMotorPower = frontRight;
 				rearLeftMotorPower = rearLeft;
 				rearRightMotorPower = rearRight;
-
 			}
 			assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
 		}
@@ -553,9 +530,7 @@ public class RobotTemplate {
 		while(Math.abs(averageEncoder) < Math.abs(inches) && autoOpMethods.opModeIsActive()) {
 			averageEncoder = ((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2)/2;
 			if (fieldCentric) { // Field-Centric-Mecanum
-
 				double angleOfRobot = integratedZAxis;
-
 
 				double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.6, 0.08, 2, true);
 
@@ -570,15 +545,12 @@ public class RobotTemplate {
 				double robotAngle = ((-thetaOfTravel)*Math.PI)/180;
 				double rightX = turnRobotTeleopShush( -(thetaOfRotation + startAngle), pidObject, 2.5, 1);
 
-
-
 				frontLeftMotorPower = magnitude * Math.cos(robotAngle) + (rightX * 2);
 				frontRightMotorPower = magnitude * Math.sin(robotAngle) - (rightX * 2);
 				rearLeftMotorPower = magnitude * Math.sin(robotAngle) + (rightX * 2);
 				rearRightMotorPower = magnitude * Math.cos(robotAngle) - (rightX * 2);
 
 			} else if (!fieldCentric) { // Robot-Centric Mecanum
-
 				double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.3, 0.08, 2, true); // Trig magic
 				if(magnitude > 1){
 					magnitude =1;
@@ -600,7 +572,6 @@ public class RobotTemplate {
 				frontRightMotorPower = frontRight;
 				rearLeftMotorPower = rearLeft;
 				rearRightMotorPower = rearRight;
-
 			}
 			assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
 		}
@@ -608,15 +579,14 @@ public class RobotTemplate {
 		pidObject.resetValues();
 		resetEncoderWheels();
 	}
+
 	public void autoMechanumDriveBackLeftSensor(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double inches){
 		double startAngle = integratedZAxis;
 		double sensorValue = backLeftDistanceSensor.getDistance(DistanceUnit.INCH);
 		while(Math.abs(sensorValue) > Math.abs(inches) && autoOpMethods.opModeIsActive()) {
 			sensorValue = backRightDistanceSensor.getDistance(DistanceUnit.INCH);
 			if (fieldCentric) { // Field-Centric-Mecanum
-
 				double angleOfRobot = integratedZAxis;
-
 
 				double magnitude = -basicPIDReturnGeneral(inches, sensorValue, 0.4, 0, 3, true)/3;
 
@@ -632,15 +602,12 @@ public class RobotTemplate {
 				double robotAngle = ((-thetaOfTravel)*Math.PI)/180;
 				double rightX = turnRobotTeleopShush( -(thetaOfRotation + startAngle), pidObject, 2.5, 1);
 
-
-
 				frontLeftMotorPower = magnitude * Math.cos(robotAngle) + (rightX * 2);
 				frontRightMotorPower = magnitude * Math.sin(robotAngle) - (rightX * 2);
 				rearLeftMotorPower = magnitude * Math.sin(robotAngle) + (rightX * 2);
 				rearRightMotorPower = magnitude * Math.cos(robotAngle) - (rightX * 2);
 
 			} else if (!fieldCentric) { // Robot-Centric Mecanum
-
 				double magnitude = -basicPIDReturnGeneral(inches, sensorValue, 0.4, 0, 0.5, true)/3;
 				if(magnitude > 1){
 					magnitude =1;
@@ -662,7 +629,6 @@ public class RobotTemplate {
 				frontRightMotorPower = frontRight;
 				rearLeftMotorPower = rearLeft;
 				rearRightMotorPower = rearRight;
-
 			}
 			assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
 		}
@@ -670,6 +636,7 @@ public class RobotTemplate {
 		resetEncoderWheels();
 		assignMotorPowers(0, 0, 0, 0);
 	}
+
 	public void autoTurnPID(NickPID pidObject, double targetAngle, double threshold, double kP, double kD){
 		while(pidObject.previousError > threshold) {
 			double motorPower = turnRobotTeleop(targetAngle, pidObject, kP, kD); // default of 1.5 and 1
@@ -679,7 +646,6 @@ public class RobotTemplate {
 			rearLeftMotorPower = motorPower;
 			rearRightMotorPower = -motorPower;
 			assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
-
 		}
 		assignMotorPowers(0, 0, 0, 0);
 	}
@@ -693,6 +659,7 @@ public class RobotTemplate {
 
 	}
 
+	//maybe put these where the variables should go - Jacob
 	public double integral = 0;
 	public double previous_error = 0;
 	public void turnRobotWithPID(double targetAngle, double pK, double iK, double dK){
@@ -720,6 +687,7 @@ public class RobotTemplate {
 	}
 
 	public void primaryProgram(){// We did this because we don't understand multi-threading
+								 //No one ever does, they just deal with the consequences. - Jacob
 		//autoOpMethods.telemetry.addData("cm", "%.2f cm", wallDistance.getDistance(DistanceUnit.CM));
 		//autoOpMethods.telemetry.update();
 
@@ -731,7 +699,6 @@ public class RobotTemplate {
 
 		liftMoveUp(autoOpMethods.gamepad2.dpad_up, autoOpMethods.gamepad2.dpad_down); // Moves up and down
 		flip(autoOpMethods.gamepad2.x, autoOpMethods.gamepad2.b, .45); // Flips the carriage
-
 
 		if (!autoOpMethods.gamepad2.right_bumper){
 			if(autoOpMethods.gamepad2.dpad_left){
@@ -759,7 +726,6 @@ public class RobotTemplate {
 		}
 	}
 
-
 	Thread teleOpAutoMatedThread = new Thread(new Runnable() {
 			@Override
 			public void run(){
@@ -782,7 +748,6 @@ public class RobotTemplate {
 		integratedZAxis = 0;
 		lastHeading = 0;
 	}
-
 
 	public double integratedZAxis = 0;
 	public double lastHeading = 0;
@@ -822,10 +787,7 @@ public class RobotTemplate {
 
 		teleOpMethods.telemetry.addData("integratedZAxis: ", integratedZAxis);
 		teleOpMethods.telemetry.update();
-
 	}
-
-
 
 	public void autoGyroInit(){
 		BNO055IMU.Parameters param = new BNO055IMU.Parameters();
@@ -996,8 +958,6 @@ public class RobotTemplate {
 		double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.1, 0.85, 1.75, false);
 		//double r = basicPIDReturnGeneral(distanceSensorValue, distanceInches, 0.1, 1.0, 1.75, false);
 
-
-
 		if(r > 1){
 			r =1;
 		}
@@ -1051,7 +1011,6 @@ public class RobotTemplate {
 		assignMotorPowers(0, 0, 0, 0);
 	}
 	public void autoStrafeDistanceSensor(NickPID pidObject, double power, double angleofTravel, double angleofRotation, double distanceInches){
-
 		double distanceSensorValue = getWallDistanceInches();
 		double error = distanceSensorValue - distanceInches;
 
@@ -1094,16 +1053,12 @@ public class RobotTemplate {
 		assignMotorPowers(0, 0, 0, 0);
 	}
 
-
-
 	public void resetEncoderWheels(){
 		leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 		leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
 	}
 
 	public void stopDriveMotors(){
@@ -1129,7 +1084,6 @@ public class RobotTemplate {
 		leftRear.setPower(rearLeft.floatValue());
 		rightFront.setPower(frontRight.floatValue());
 	}
-
 
 	public void intake(boolean button, boolean reverseButton, double power){
 		if(button){
@@ -1165,8 +1119,6 @@ public class RobotTemplate {
 	}
 
 	public void backupToPlate(double inchesAway, double power, double timeSeconds){
-
-
 		double startTime = autoOpMethods.time;
 
 		double DistanceSensorValue = 0;
@@ -1184,13 +1136,9 @@ public class RobotTemplate {
 			rightFront.setPower(power);
 			leftRear.setPower(power);
 			rightRear.setPower(power);
-
-
 		}
 		stopDriveMotors();
 	}
-
-
 
 	public void automatedPickUpTele( boolean button, int newPosition){
 		if(button) {
@@ -1220,8 +1168,6 @@ public class RobotTemplate {
 		}
 		return false;
 	} 
-
-
 
 	public void automatedCarriageReturnTele(boolean button, int safetyStop){
 		if(button) {
@@ -1276,7 +1222,4 @@ public class RobotTemplate {
 			ledDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.GOLD);
 		}
 	}
-
-
-
 }

@@ -34,7 +34,7 @@ public class Autonomous1 extends LinearOpMode {
 	private double timeout;
 
 	@Override
-		public void runOpMode(){
+		public void runOpMode() {
 
 			//initialize the robot object
 			robot = new RobotTemplate(this);
@@ -66,7 +66,6 @@ public class Autonomous1 extends LinearOpMode {
 			telemetry.addData("Robot Status:", "Initialized.");
 			telemetry.update();
 
-
 			waitForStart();
 
 			//robot.autoStrafeDistanceSensor(turnPID, 1, 90, 0, 16);
@@ -77,16 +76,13 @@ public class Autonomous1 extends LinearOpMode {
 			sleep(500);
 			CameraDevice.getInstance().setFlashTorchMode(false);
 
-			switch(robot.getBlockSwitchCase(robot.vuforia.blockXValue, 0.5)){
+			switch(robot.getBlockSwitchCase(robot.vuforia.blockXValue, 0.5)) {
 				case 1: // Right Block
-
-
 					robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 4);
 					robot.turnRobotAutonomous(5, 0, turnPID);
 					robot.turnRobotAutonomous(0, 0, turnPID);
 
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24);
-
 
 					//robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
 					robot.turnRobotAutonomous(-45, 0, turnPID);
@@ -113,7 +109,6 @@ public class Autonomous1 extends LinearOpMode {
 					robot.backupToPlate(2, .5);
 					//robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 11);
 
-
 					robot.leftDragServo.setPosition(.7);
 					robot.rightDragServo.setPosition(.2);
 					sleep((500));
@@ -129,7 +124,6 @@ public class Autonomous1 extends LinearOpMode {
 					 */
 
 					robot.autoMechanumDriveTime(turnPID, false, 1, 0,180, 2);
-
 
 					robot.leftDragServo.setPosition(0.1);
 					robot.rightDragServo.setPosition(1);
@@ -190,22 +184,17 @@ public class Autonomous1 extends LinearOpMode {
 						robot.turnRobotPower(1);
 					}
 					robot.turnRobotPower(0);
-					if(false){
+					if(false) {
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
 
-					}else{
+					} else {
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
 					}
 					robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, 1.0);
 
-
-
 					robot.autoMechanumDriveTime(turnPID, false, 1, 0,90, 2.0);
-
-
-
 
 					break;
 
@@ -213,11 +202,7 @@ public class Autonomous1 extends LinearOpMode {
 				case 3: // Left Block
 					robot.turnRobotAutonomous(180, 0, turnPID);
 
-
-
-
-
-					while(true && opModeIsActive()){
+					while(true && opModeIsActive()) {
 						telemetry.addData("IntegratedZ: ", robot.integratedZAxis);
 						telemetry.update();
 					}
@@ -240,16 +225,10 @@ public class Autonomous1 extends LinearOpMode {
 			doLiftReturn.interrupt();
 			imuUpdater.interrupt();
 
-
 			//robot.autoStrafeDistanceSensor(turnPID, -1, -90, 0, 0);
 			//robot.autoStrafe(turnPID, 1, 0, 180, 2);
 			//robot.autoStrafe(turnPID, 1, -180, 0, 1);
-
-
 			//robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 0);
-
-
-
 			//    while (robot.getWallDistanceInches() < 10) {
 			//      robot.autoStrafe(turnPID, -1, 0, 0);
 			//    }
@@ -257,10 +236,6 @@ public class Autonomous1 extends LinearOpMode {
 			// robot.turnRobotAutonomous(0, 500, turnPID);
 			//robot.stopDriveMotors();
 			//
-
-
-
-
 			//    robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 100);
 			//
 			//      robot.turnRobotAutonomous(-90, 500, turnPID);
@@ -280,30 +255,17 @@ public class Autonomous1 extends LinearOpMode {
 			//
 			//    robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, -360, -19);
 
-
-
-
-
-
 			// REMEMBER TO SHUT DOWN ALL THREADS
 		}
 
-
-
-
-	private class integrationOfAxis extends Thread
-	{
-		public integrationOfAxis()
-		{
+	private class integrationOfAxis extends Thread {
+		public integrationOfAxis() {
 			this.setName("integratedZAxisThread");
 		}
 
-
 		@Override
-			public void run()
-			{
-				while (!isInterrupted())
-				{
+			public void run() {
+				while (!isInterrupted()) {
 					robot.vuforia.vuforiaMain(robot);
 
 					robot.getIntegratedZAxis();
@@ -314,20 +276,15 @@ public class Autonomous1 extends LinearOpMode {
 			}
 	}
 
-
-	private class liftThing extends Thread
-	{
+	private class liftThing extends Thread {
 		boolean pickupFlag = false;
-		public liftThing(boolean pickup)
-		{
+		public liftThing(boolean pickup) {
 			pickupFlag = pickup;
 			this.setName("liftThingThread");
 		}
 
-
 		@Override
-			public void run()
-			{
+			public void run() {
 				boolean thing = true;
 
 				while (!isInterrupted())
@@ -363,6 +320,4 @@ public class Autonomous1 extends LinearOpMode {
 				}
 			}
 	}
-
-
 }

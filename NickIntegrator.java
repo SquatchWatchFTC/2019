@@ -13,7 +13,6 @@ public class NickIntegrator{
 	RobotTemplate robot;
 	NickIntegrator(RobotTemplate robotObject){
 		robot = robotObject;
-
 	}
 	public void integrator(double value, boolean telemetryOption){
 		double deltaValue = value - this.previousValue;

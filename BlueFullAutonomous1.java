@@ -23,7 +23,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.internal.tfod.Timer;
 
-
 @Autonomous(name = "Blue Full Autonomous 1.21", group = "ready")
 //@Disabled
 public class BlueFullAutonomous1 extends LinearOpMode {
@@ -33,17 +32,13 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 	private double timeout;
 
-
-
-
 	@Override
-		public void runOpMode(){
+		public void runOpMode() {
 			robot = new RobotTemplate(this);
 			telemetry.addData("Robot Status:", "Initializing, Please Wait.");
 			telemetry.update();
 
 			robot.autoInit();
-
 
 			NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
 			robot.vuforia = new VuforiaSkystone1920();
@@ -57,9 +52,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 			robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-
-
-
 			robot.vuforia.start();
 			robot.vuforia.vuforiaMain(robot);
 			imuUpdater.start();
@@ -68,7 +60,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 			telemetry.addData("Robot Status:", "Initialized.");
 			telemetry.update();
-
 
 			waitForStart();
 
@@ -83,13 +74,11 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 			switch(robot.getBlockSwitchCase(robot.vuforia.blockXValue, 0.5)){
 				case 1: // Right Block
 
-
 					robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 5);
 					robot.turnRobotAutonomous(5, 0, turnPID);
 					robot.turnRobotAutonomous(0, 0, turnPID);
 
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23);
-
 
 					//robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
 					robot.turnRobotAutonomous(-75, 0, turnPID);
@@ -116,12 +105,10 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 					robot.turnRobotAutonomous(180, 0, turnPID);
 					robot.backupToPlate(2, .5, 0.65);
 
-
-					if(true){
+					if (true) {
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
-
-					}else{
+					} else {
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
 					}
@@ -129,7 +116,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 					robot.gripServo.setPosition(.76);
 
 					sleep(1000);
-
 
 					doLiftReturn.start();
 
@@ -139,18 +125,17 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 						robot.turnRobotPower(1);
 					}
 					robot.turnRobotPower(0);
-					if(false){
+					if (false) {
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
 
-					}else{
+					} else {
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
 					}
 					robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
 
 					robot.turnRobotAutonomous(80, 0, turnPID);
-
 
 					robot.autoMechanumDriveTime(turnPID, false, 1, 0,80, 1.4);
 
@@ -184,13 +169,8 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 					//            robot.autoMechanumDriveTime(turnPID, false, 1, -90,180, 1);
 					//            robot.autoMechanumDriveTime(turnPID, false, 1, -85,90, 3);
 
-
-
-
-
-
-
 					break;
+
 				case 2: // Middle Block
 					telemetry.addLine("case 2");
 					robot.autoMechanumDriveEncoder(turnPID, false, .65, 0, 0, 11);
@@ -220,12 +200,10 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 					robot.turnRobotAutonomous(180, 0, turnPID);
 					robot.backupToPlate(2, .5, .65);
 
-
-					if(true){
+					if (true) {
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
-
-					}else{
+					} else {
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
 					}
@@ -233,7 +211,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 					robot.gripServo.setPosition(.76);
 
 					sleep(1000);
-
 
 					doLiftReturn.start();
 
@@ -243,11 +220,10 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 						robot.turnRobotPower(1);
 					}
 					robot.turnRobotPower(0);
-					if(false){
+					if (false) {
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
-
-					}else{
+					} else {
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
 					}
@@ -256,24 +232,16 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 					robot.turnRobotAutonomous(80, 0, turnPID);
 
-
 					robot.autoMechanumDriveTime(turnPID, false, 1, 0,80, 1.4);
-
-
-
 
 					break;
 
-
 				case 3: // Left Block
-
-
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 2);
 					robot.turnRobotAutonomous(5, 0, turnPID);
 					robot.turnRobotAutonomous(0, 0, turnPID);
 
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23);
-
 
 					//robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
 					robot.turnRobotAutonomous(-75, 0, turnPID);
@@ -300,12 +268,11 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 					robot.turnRobotAutonomous(180, 0, turnPID);
 					robot.backupToPlate(2, .5, 0.75);
 
-
-					if(true){
+					if (true) {
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
 
-					}else{
+					} else {
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
 					}
@@ -313,7 +280,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 					robot.gripServo.setPosition(.76);
 
 					sleep(1000);
-
 
 					doLiftReturn.start();
 
@@ -323,17 +289,16 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 						robot.turnRobotPower(1);
 					}
 					robot.turnRobotPower(0);
-					if(false){
+					if (false) {
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
 
-					}else{
+					} else {
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
 					}
 
 					robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
-
 
 					robot.turnRobotAutonomous(80, 0, turnPID);
 
@@ -346,15 +311,11 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 			doLiftReturn.interrupt();
 			imuUpdater.interrupt();
 
-
 			//robot.autoStrafeDistanceSensor(turnPID, -1, -90, 0, 0);
 			//robot.autoStrafe(turnPID, 1, 0, 180, 2);
 			//robot.autoStrafe(turnPID, 1, -180, 0, 1);
 
-
 			//robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 0);
-
-
 
 			//    while (robot.getWallDistanceInches() < 10) {
 			//      robot.autoStrafe(turnPID, -1, 0, 0);
@@ -363,9 +324,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 			// robot.turnRobotAutonomous(0, 500, turnPID);
 			//robot.stopDriveMotors();
 			//
-
-
-
 
 			//    robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 100);
 			//
@@ -385,17 +343,8 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 			//    robot.turnRobotAutonomous(-360, 500, turnPID);
 			//
 			//    robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, -360, -19);
-
-
-
-
-
-
 			// REMEMBER TO SHUT DOWN ALL THREADS
 		}
-
-
-
 
 	private class integrationOfAxis extends Thread
 	{
@@ -403,7 +352,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 		{
 			this.setName("integratedZAxisThread");
 		}
-
 
 		@Override
 			public void run()
@@ -420,7 +368,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 			}
 	}
 
-
 	private class liftThing extends Thread
 	{
 		boolean pickupFlag = false;
@@ -429,7 +376,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 			pickupFlag = pickup;
 			this.setName("liftThingThread");
 		}
-
 
 		@Override
 			public void run()
@@ -469,6 +415,4 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 				}
 			}
 	}
-
-
 }

@@ -8,7 +8,8 @@ public class NickPID{
 
 	private boolean calcFlag1 = true;
 
-	public NickPID(){
+	public NickPID(){ 
+		//Why include this?
 	}
 
 	public NickPID(RobotTemplate robotObject){
@@ -126,6 +127,4 @@ public class NickPID{
 		this.previousError = error;
 		return output;
 	}
-
-
 }

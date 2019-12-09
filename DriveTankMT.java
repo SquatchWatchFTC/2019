@@ -48,17 +48,10 @@ public class DriveTankMT extends LinearOpMode
 
 			// wait for start button.
 
-
-
 			waitForStart();        // wait for start button.
-
 
 			intakeAndLift.start();
 			robot.liftHeightColor.start();
-
-
-
-
 
 			while (opModeIsActive())
 			{
@@ -77,8 +70,6 @@ public class DriveTankMT extends LinearOpMode
 			// stop the driving thread.
 			intakeAndLift.interrupt();
 			robot.liftHeightColor.interrupt();
-
-
 		}
 
 	private class intakeAndLift extends Thread
@@ -87,7 +78,6 @@ public class DriveTankMT extends LinearOpMode
 		{
 			this.setName("DriveThread");
 			robot.initialLiftEncoderCount = robot.liftMotor.getCurrentPosition();
-
 		}
 
 		// called when thread.start is called. thread stays in loop to do what it does until exit is
@@ -95,20 +85,14 @@ public class DriveTankMT extends LinearOpMode
 		@Override
 			public void run()
 			{
-
 				while (!isInterrupted())
 				{
 					if(gamepad2.left_bumper || true){
 						robot.primaryProgram();
 					}
-
 					idle();
 
 				}
-
-
-
-
 			}
 	}
 }

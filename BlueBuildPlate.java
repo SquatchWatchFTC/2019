@@ -31,32 +31,23 @@ public class BlueBuildPlate extends LinearOpMode {
 	private ElapsedTime runtime = new ElapsedTime();
 	private RobotTemplate robot;
 
-
-
-
-
 	@Override
-		public void runOpMode(){
+		public void runOpMode() {
 			robot = new RobotTemplate(this);
 			telemetry.addData("Robot Status:", "Initializing, Please Wait.");
 			telemetry.update();
 
 			robot.autoInit();
 
-
 			NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
 			integrationOfAxis imuUpdater = new integrationOfAxis();
 
-
 			robot.resetEncoderWheels();
-
 
 			imuUpdater.start();
 
-
 			telemetry.addData("Robot Status:", "Initialized.");
 			telemetry.update();
-
 
 			waitForStart();
 
@@ -69,42 +60,37 @@ public class BlueBuildPlate extends LinearOpMode {
 
 			robot.backupToPlate(2, .5, 0.65);
 
-			if(true){
+			if (true) {
 				robot.leftDragServo.setPosition(.7);
 				robot.rightDragServo.setPosition(.2);
 
-			}else{
+			}else {
 				robot.leftDragServo.setPosition(0.1);
 				robot.rightDragServo.setPosition(1);
 			}
 			sleep((500));
 
-
 			sleep(1000);
-
-
 
 			robot.autoMechanumDriveTime(turnPID, false, 1, 0,0, 1);
 			double case1time = time;
-			while((time <  case1time + 2) && (robot.integratedZAxis > -90)){
+			while((time <  case1time + 2) && (robot.integratedZAxis > -90)) {
 				robot.turnRobotPower(1);
 			}
 			robot.turnRobotPower(0);
 
-			if(false){
+			if (false) {
 				robot.leftDragServo.setPosition(.7);
 				robot.rightDragServo.setPosition(.2);
 
-			}else{
+			} else {
 				robot.leftDragServo.setPosition(0.1);
 				robot.rightDragServo.setPosition(1);
 			}
+
 			robot.autoMechanumDriveTime(turnPID, false, -1, 0,-90, .5);
 
-
-
 			robot.autoMechanumDriveTime(turnPID, false, 1, 0,-90, 1.3);
-
 
 			robot.autoMechanumDriveTime(turnPID, false, 1, 90, -90, 2);
 
@@ -112,22 +98,14 @@ public class BlueBuildPlate extends LinearOpMode {
 
 		}
 
-
-
-
-	private class integrationOfAxis extends Thread
-	{
-		public integrationOfAxis()
-		{
+	private class integrationOfAxis extends Thread {
+		public integrationOfAxis() {
 			this.setName("integratedZAxisThread");
 		}
 
-
 		@Override
-			public void run()
-			{
-				while (!isInterrupted())
-				{
+			public void run() {
+				while (!isInterrupted()) {
 					robot.getIntegratedZAxis();
 					robot.callAllTelemetry(); // Do not call telem.update at ALL. It'll freak out.
 
@@ -137,23 +115,18 @@ public class BlueBuildPlate extends LinearOpMode {
 	}
 
 
-	private class liftThing extends Thread
-	{
+	private class liftThing extends Thread {
 		boolean pickupFlag = false;
-		public liftThing(boolean pickup)
-		{
+		public liftThing(boolean pickup) {
 			pickupFlag = pickup;
 			this.setName("liftThingThread");
 		}
 
-
 		@Override
-			public void run()
-			{
+			public void run() {
 				boolean thing = true;
 
-				while (!isInterrupted())
-				{
+				while (!isInterrupted()) {
 					if(pickupFlag && thing) {
 						robot.automatedPickUpTele(thing, 350);
 						try {
@@ -161,21 +134,25 @@ public class BlueBuildPlate extends LinearOpMode {
 						} catch(InterruptedException e) {
 							System.out.println("got interrupted!: " + e);
 						}
+
 						robot.flip(true, false, .45);
 						try {
 							Thread.sleep(700);
 						} catch(InterruptedException e) {
 							System.out.println("got interrupted!: " + e);
 						}
+
 						robot.flip(false, false, .45);
 						thing = false;
-					}else if(!pickupFlag && thing){
+
+					} else if (!pickupFlag && thing) {
 						robot.flipMotor.setPower(-0.45);
 						try {
 							Thread.sleep(700);
 						} catch(InterruptedException e) {
 							System.out.println("got interrupted!: " + e);
 						}
+
 						robot.flipMotor.setPower(0);
 
 						robot.automatedCarriageReturnTele(thing, 0);
@@ -185,6 +162,4 @@ public class BlueBuildPlate extends LinearOpMode {
 				}
 			}
 	}
-
-
 }

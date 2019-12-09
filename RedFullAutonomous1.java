@@ -33,9 +33,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 
 	private double timeout;
 
-
-
-
 	@Override
 		public void runOpMode(){
 			robot = new RobotTemplate(this);
@@ -43,7 +40,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 			telemetry.update();
 
 			robot.autoInit();
-
 
 			NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
 			robot.vuforia = new VuforiaSkystone1920();
@@ -57,9 +53,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 
 			robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-
-
-
 			robot.vuforia.start();
 			robot.vuforia.vuforiaMain(robot);
 			imuUpdater.start();
@@ -68,7 +61,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 
 			telemetry.addData("Robot Status:", "Initialized.");
 			telemetry.update();
-
 
 			waitForStart();
 
@@ -84,13 +76,11 @@ public class RedFullAutonomous1 extends LinearOpMode {
 				case 3: // Left Block
 					telemetry.addLine("pos 3");
 
-
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 15.5);
 					robot.turnRobotAutonomousRed(5, 0, turnPID);
 					robot.turnRobotAutonomousRed(0, 0, turnPID);
 
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24);
-
 
 					//robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
 
@@ -118,7 +108,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					robot.turnRobotAutonomousRed(-180, 0, turnPID);
 					robot.backupToPlate(2, .7, 1.75); // Backs up to plate
 
-
 					if(true){
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
@@ -131,7 +120,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					robot.gripServo.setPosition(.76);
 
 					sleep(1000);
-
 
 					doLiftReturn.start();
 
@@ -188,13 +176,8 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					//            robot.autoMechanumDriveTime(turnPID, false, 1, -90,180, 1);
 					//            robot.autoMechanumDriveTime(turnPID, false, 1, -85,90, 3);
 
-
-
-
-
-
-
 					break;
+
 				case 2: // Middle Block
 					telemetry.addLine("case 2");
 
@@ -219,7 +202,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					robot.turnRobotAutonomousRed(-95, 0, turnPID);
 					robot.turnRobotAutonomousRed(-95, 0, turnPID);
 
-
 					robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 44);
 					doLiftPickup.start();
 					robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 24);
@@ -227,11 +209,9 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					robot.turnRobotAutonomousRed(-180, 0, turnPID);
 					robot.backupToPlate(2, .5, 1.75);
 
-
 					if(true){
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
-
 					}else{
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
@@ -240,7 +220,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					robot.gripServo.setPosition(.76);
 
 					sleep(1000);
-
 
 					doLiftReturn.start();
 
@@ -254,7 +233,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					if(false){
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
-
 					}else{
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
@@ -264,26 +242,18 @@ public class RedFullAutonomous1 extends LinearOpMode {
 
 					robot.turnRobotAutonomousRed(-75, 0, turnPID);
 
-
 					robot.autoMechanumDriveTime(turnPID, false, 1, 0,-75, 1.4);
-
-
-
 
 					break;
 
-
 				case 1: // Right Block
 					telemetry.addLine("pos 1");
-
-
 
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 6);
 					robot.turnRobotAutonomousRed(5, 0, turnPID);
 					robot.turnRobotAutonomousRed(0, 0, turnPID);
 
 					robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 24);
-
 
 					//robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
 					robot.turnRobotAutonomousRed(45, 0, turnPID);
@@ -311,11 +281,9 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					robot.turnRobotAutonomousRed(-185, 0, turnPID);
 					robot.backupToPlate(2, .5, 1.75);
 
-
 					if(true){
 						robot.leftDragServo.setPosition(.7);
 						robot.rightDragServo.setPosition(.2);
-
 					}else{
 						robot.leftDragServo.setPosition(0.1);
 						robot.rightDragServo.setPosition(1);
@@ -324,7 +292,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 					robot.gripServo.setPosition(.76);
 
 					sleep(1000);
-
 
 					doLiftReturn.start();
 
@@ -356,15 +323,11 @@ public class RedFullAutonomous1 extends LinearOpMode {
 			doLiftReturn.interrupt();
 			imuUpdater.interrupt();
 
-
 			//robot.autoStrafeDistanceSensor(turnPID, -1, -90, 0, 0);
 			//robot.autoStrafe(turnPID, 1, 0, 180, 2);
 			//robot.autoStrafe(turnPID, 1, -180, 0, 1);
 
-
 			//robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 0);
-
-
 
 			//    while (robot.getWallDistanceInches() < 10) {
 			//      robot.autoStrafe(turnPID, -1, 0, 0);
@@ -373,9 +336,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 			// robot.turnRobotAutonomous(0, 500, turnPID);
 			//robot.stopDriveMotors();
 			//
-
-
-
 
 			//    robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 100);
 			//
@@ -396,16 +356,8 @@ public class RedFullAutonomous1 extends LinearOpMode {
 			//
 			//    robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, -360, -19);
 
-
-
-
-
-
 			// REMEMBER TO SHUT DOWN ALL THREADS
 		}
-
-
-
 
 	private class integrationOfAxis extends Thread
 	{
@@ -413,7 +365,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 		{
 			this.setName("integratedZAxisThread");
 		}
-
 
 		@Override
 			public void run()
@@ -430,7 +381,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 			}
 	}
 
-
 	private class liftThing extends Thread
 	{
 		boolean pickupFlag = false;
@@ -439,7 +389,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
 			pickupFlag = pickup;
 			this.setName("liftThingThread");
 		}
-
 
 		@Override
 			public void run()
@@ -479,7 +428,4 @@ public class RedFullAutonomous1 extends LinearOpMode {
 				}
 			}
 	}
-
-
 }
-
