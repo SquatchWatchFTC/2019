@@ -26,89 +26,89 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 //@Disabled
 public class DriveTankMT extends LinearOpMode
 {
-    private ElapsedTime runtime = new ElapsedTime();
-    private RobotTemplate robot;
+	private ElapsedTime runtime = new ElapsedTime();
+	private RobotTemplate robot;
 
-    // called when init button is  pressed.
-    @Override
-    public void runOpMode() throws InterruptedException
-    {
-        // create an instance of the DriveThread.
-        robot = new RobotTemplate(this);
-        robot.autoInit();
-        robot.resetEncoderWheels();
-        
-        Thread  intakeAndLift = new intakeAndLift();
-        NickPID turnPID = new NickPID(robot);
+	// called when init button is  pressed.
+	@Override
+		public void runOpMode() throws InterruptedException
+		{
+			// create an instance of the DriveThread.
+			robot = new RobotTemplate(this);
+			robot.autoInit();
+			robot.resetEncoderWheels();
 
-        //robot.resetEncoderWheels();
+			Thread  intakeAndLift = new intakeAndLift();
+			NickPID turnPID = new NickPID(robot);
 
-        telemetry.addData("Mode: ", "Initialized."); // Once you see this, the calibration and vuforia is initialized.
-        telemetry.update();
+			//robot.resetEncoderWheels();
 
-        // wait for start button.
+			telemetry.addData("Mode: ", "Initialized."); // Once you see this, the calibration and vuforia is initialized.
+			telemetry.update();
 
-
-
-        waitForStart();        // wait for start button.
-
-
-        intakeAndLift.start();
-        robot.liftHeightColor.start();
+			// wait for start button.
 
 
 
+			waitForStart();        // wait for start button.
 
 
-            while (opModeIsActive())
-            {
-                robot.getIntegratedZAxis();
-                robot.autoOpMethods.telemetry.addData("integratedZAxis: ", robot.integratedZAxis);
-                robot.autoOpMethods.telemetry.addData("leftBack: ", robot.backLeftDistanceSensor.getDistance(DistanceUnit.INCH));
-                robot.autoOpMethods.telemetry.addData("rightBack: ", robot.backRightDistanceSensor.getDistance(DistanceUnit.INCH));
-
-//                robot.autoOpMethods.telemetry.addData("leftEnc: ", robot.leftFront.getCurrentPosition());
-//                robot.autoOpMethods.telemetry.addData("rightEnc: ", robot.rightFront.getCurrentPosition());
-                robot.autoOpMethods.telemetry.update();
-                robot.robotDriveFunctions(turnPID, gamepad1.x);
-                idle();
-            }
-
-        // stop the driving thread.
-        intakeAndLift.interrupt();
-        robot.liftHeightColor.interrupt();
-
-
-    }
-
-    private class intakeAndLift extends Thread
-    {
-        public intakeAndLift()
-        {
-            this.setName("DriveThread");
-            robot.initialLiftEncoderCount = robot.liftMotor.getCurrentPosition();
-
-        }
-
-        // called when thread.start is called. thread stays in loop to do what it does until exit is
-        // signaled by main code calling thread.interrupt.
-        @Override
-        public void run()
-        {
-
-                while (!isInterrupted())
-                {
-                    if(gamepad2.left_bumper || true){
-                        robot.primaryProgram();
-                    }
-
-                    idle();
-
-                }
-      
+			intakeAndLift.start();
+			robot.liftHeightColor.start();
 
 
 
-        }
-    }
+
+
+			while (opModeIsActive())
+			{
+				robot.getIntegratedZAxis();
+				robot.autoOpMethods.telemetry.addData("integratedZAxis: ", robot.integratedZAxis);
+				robot.autoOpMethods.telemetry.addData("leftBack: ", robot.backLeftDistanceSensor.getDistance(DistanceUnit.INCH));
+				robot.autoOpMethods.telemetry.addData("rightBack: ", robot.backRightDistanceSensor.getDistance(DistanceUnit.INCH));
+
+				//                robot.autoOpMethods.telemetry.addData("leftEnc: ", robot.leftFront.getCurrentPosition());
+				//                robot.autoOpMethods.telemetry.addData("rightEnc: ", robot.rightFront.getCurrentPosition());
+				robot.autoOpMethods.telemetry.update();
+				robot.robotDriveFunctions(turnPID, gamepad1.x);
+				idle();
+			}
+
+			// stop the driving thread.
+			intakeAndLift.interrupt();
+			robot.liftHeightColor.interrupt();
+
+
+		}
+
+	private class intakeAndLift extends Thread
+	{
+		public intakeAndLift()
+		{
+			this.setName("DriveThread");
+			robot.initialLiftEncoderCount = robot.liftMotor.getCurrentPosition();
+
+		}
+
+		// called when thread.start is called. thread stays in loop to do what it does until exit is
+		// signaled by main code calling thread.interrupt.
+		@Override
+			public void run()
+			{
+
+				while (!isInterrupted())
+				{
+					if(gamepad2.left_bumper || true){
+						robot.primaryProgram();
+					}
+
+					idle();
+
+				}
+
+
+
+
+			}
+	}
 }
