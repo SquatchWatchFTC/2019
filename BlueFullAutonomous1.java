@@ -118,12 +118,10 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 
             if(true){
-              robot.leftDragServo.setPosition(.7);
-              robot.rightDragServo.setPosition(.2);
+              robot.dragServo.setPosition(.7);
 
             }else{
-              robot.leftDragServo.setPosition(0.1);
-              robot.rightDragServo.setPosition(1);
+              robot.dragServo.setPosition(0.1);
             }
             sleep((500));
             robot.gripServo.setPosition(.76);
@@ -140,16 +138,15 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             }
             robot.turnRobotPower(0);
             if(false){
-              robot.leftDragServo.setPosition(.7);
-              robot.rightDragServo.setPosition(.2);
+              robot.dragServo.setPosition(.7);
 
             }else{
-              robot.leftDragServo.setPosition(0.1);
-              robot.rightDragServo.setPosition(1);
+              robot.dragServo.setPosition(0.1);
             }
             robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
-
-            robot.turnRobotAutonomous(80, 0, turnPID);
+            while(runtime.milliseconds() < 28600 && opModeIsActive()) {
+              robot.turnRobotAutonomous(80, 0, turnPID);
+            }
 
 
             robot.autoMechanumDriveTime(turnPID, false, 1, 0,80, 1.4);
@@ -222,12 +219,10 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 
             if(true){
-              robot.leftDragServo.setPosition(.7);
-              robot.rightDragServo.setPosition(.2);
+              robot.dragServo.setPosition(.7);
 
             }else{
-              robot.leftDragServo.setPosition(0.1);
-              robot.rightDragServo.setPosition(1);
+              robot.dragServo.setPosition(0.1);
             }
             sleep((500));
             robot.gripServo.setPosition(.76);
@@ -244,12 +239,10 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             }
             robot.turnRobotPower(0);
             if(false){
-              robot.leftDragServo.setPosition(.7);
-              robot.rightDragServo.setPosition(.2);
+              robot.dragServo.setPosition(.7);
 
             }else{
-              robot.leftDragServo.setPosition(0.1);
-              robot.rightDragServo.setPosition(1);
+              robot.dragServo.setPosition(0.1);
             }
 
             robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
@@ -268,7 +261,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
           case 3: // Left Block
 
 
-            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 2);
+            robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 1.75);
             robot.turnRobotAutonomous(5, 0, turnPID);
             robot.turnRobotAutonomous(0, 0, turnPID);
 
@@ -295,19 +288,17 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 28);
             doLiftPickup.start();
-            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 28);
+            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 33);
 
             robot.turnRobotAutonomous(180, 0, turnPID);
             robot.backupToPlate(2, .5, 0.75);
 
 
             if(true){
-              robot.leftDragServo.setPosition(.7);
-              robot.rightDragServo.setPosition(.2);
+              robot.dragServo.setPosition(.7);
 
             }else{
-              robot.leftDragServo.setPosition(0.1);
-              robot.rightDragServo.setPosition(1);
+              robot.dragServo.setPosition(0.1);
             }
             sleep((500));
             robot.gripServo.setPosition(.76);
@@ -324,12 +315,10 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             }
             robot.turnRobotPower(0);
             if(false){
-              robot.leftDragServo.setPosition(.7);
-              robot.rightDragServo.setPosition(.2);
+              robot.dragServo.setPosition(.7);
 
             }else{
-              robot.leftDragServo.setPosition(0.1);
-              robot.rightDragServo.setPosition(1);
+              robot.dragServo.setPosition(0.1);
             }
 
             robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);

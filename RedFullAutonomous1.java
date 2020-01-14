@@ -85,7 +85,7 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 telemetry.addLine("pos 3");
 
 
-                robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 15.5);
+                robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 20.5);
                 robot.turnRobotAutonomousRed(5, 0, turnPID);
                 robot.turnRobotAutonomousRed(0, 0, turnPID);
 
@@ -106,8 +106,8 @@ public class RedFullAutonomous1 extends LinearOpMode {
 //
                 robot.turnRobotAutonomousRed(-30, 0, turnPID);
                 robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
-                robot.turnRobotAutonomousRed(-95, 0, turnPID); // Rotate and drive to go under bridge
-                robot.turnRobotAutonomousRed(-95, 0, turnPID); // Rotate and drive to go under bridge
+                robot.turnRobotAutonomousRed(-90, 0, turnPID); // Rotate and drive to go under bridge
+                robot.turnRobotAutonomousRed(-90, 0, turnPID); // Rotate and drive to go under bridge
 
                 //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
 
@@ -116,16 +116,14 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20); // Go under bridge
 
                 robot.turnRobotAutonomousRed(-180, 0, turnPID);
-                robot.backupToPlate(2, .7, 1.75); // Backs up to plate
+                robot.backupToPlate(2, .7, .7); // Backs up to plate
 
 
                 if(true){
-                    robot.leftDragServo.setPosition(.7);
-                    robot.rightDragServo.setPosition(.2);
+                    robot.dragServo.setPosition(.7);
 
                 }else{
-                    robot.leftDragServo.setPosition(0.1);
-                    robot.rightDragServo.setPosition(1);
+                    robot.dragServo.setPosition(0.1);
                 }
                 sleep((500));
                 robot.gripServo.setPosition(.76);
@@ -143,12 +141,10 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.turnRobotPower(0);
 
                 if(false){
-                    robot.leftDragServo.setPosition(.7);
-                    robot.rightDragServo.setPosition(.2);
+                    robot.dragServo.setPosition(.7);
 
                 }else{
-                    robot.leftDragServo.setPosition(0.1);
-                    robot.rightDragServo.setPosition(1);
+                    robot.dragServo.setPosition(0.1);
                 }
 
                 robot.autoMechanumDriveTime(turnPID, false, -1, 0,-90, .5);
@@ -203,9 +199,9 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.turnRobotAutonomousRed(5, 0, turnPID);
                 robot.turnRobotAutonomousRed(0, 0, turnPID);
 
-                robot.autoMechanumDriveEncoder(turnPID, false, .45, 0, 0, 24.5);
+                robot.autoMechanumDriveEncoder(turnPID, false, .45, 0, 0, 21.5);
 
-                robot.turnRobotAutonomousRed(75, 0, turnPID);
+                robot.turnRobotAutonomousRed(65, 0, turnPID);
                 robot.turnRobotAutonomousRed(-90, 0, turnPID);
 
                 robot.intake(true, false, 0.73);
@@ -215,9 +211,9 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.intake(false, false, 0.5);
 
                 robot.turnRobotAutonomousRed(-30, 0, turnPID);
-                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
-                robot.turnRobotAutonomousRed(-95, 0, turnPID);
-                robot.turnRobotAutonomousRed(-95, 0, turnPID);
+                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 10);
+                robot.turnRobotAutonomousRed(-90, 0, turnPID);
+                robot.turnRobotAutonomousRed(-90, 0, turnPID);
 
 
                 robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 44);
@@ -225,16 +221,14 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 24);
 
                 robot.turnRobotAutonomousRed(-180, 0, turnPID);
-                robot.backupToPlate(2, .5, 1.75);
+                robot.backupToPlate(2, .5, .7);
 
 
                 if(true){
-                    robot.leftDragServo.setPosition(.7);
-                    robot.rightDragServo.setPosition(.2);
+                    robot.dragServo.setPosition(.7);
 
                 }else{
-                    robot.leftDragServo.setPosition(0.1);
-                    robot.rightDragServo.setPosition(1);
+                    robot.dragServo.setPosition(0.1);
                 }
                 sleep((500));
                 robot.gripServo.setPosition(.76);
@@ -252,12 +246,10 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.turnRobotPower(0);
 
                 if(false){
-                    robot.leftDragServo.setPosition(.7);
-                    robot.rightDragServo.setPosition(.2);
+                    robot.dragServo.setPosition(.7);
 
                 }else{
-                    robot.leftDragServo.setPosition(0.1);
-                    robot.rightDragServo.setPosition(1);
+                    robot.dragServo.setPosition(0.1);
                 }
 
                 robot.autoMechanumDriveTime(turnPID, false, -1, 0,-90, .5);
@@ -278,7 +270,7 @@ public class RedFullAutonomous1 extends LinearOpMode {
 
 
 
-                robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 6);
+                robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 7.5);
                 robot.turnRobotAutonomousRed(5, 0, turnPID);
                 robot.turnRobotAutonomousRed(0, 0, turnPID);
 
@@ -286,7 +278,7 @@ public class RedFullAutonomous1 extends LinearOpMode {
 
 
                 //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
-                robot.turnRobotAutonomousRed(45, 0, turnPID);
+                robot.turnRobotAutonomousRed(75, 0, turnPID);
 
                 robot.turnRobotAutonomousRed(-90, 0, turnPID);
 //
@@ -298,9 +290,9 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.intake(false, false, 0.5);
 //
                 robot.turnRobotAutonomousRed(-30, 0, turnPID);
-                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
-                robot.turnRobotAutonomousRed(-95, 0, turnPID);
-                robot.turnRobotAutonomousRed(-95, 0, turnPID);
+                robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 11.5);
+                robot.turnRobotAutonomousRed(-90, 0, turnPID);
+                robot.turnRobotAutonomousRed(-90, 0, turnPID);
 
                 //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
 
@@ -309,16 +301,14 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 36);
 
                 robot.turnRobotAutonomousRed(-185, 0, turnPID);
-                robot.backupToPlate(2, .5, 1.75);
+                robot.backupToPlate(2, .5, .7);
 
 
                 if(true){
-                    robot.leftDragServo.setPosition(.7);
-                    robot.rightDragServo.setPosition(.2);
+                    robot.dragServo.setPosition(.7);
 
                 }else{
-                    robot.leftDragServo.setPosition(0.1);
-                    robot.rightDragServo.setPosition(1);
+                    robot.dragServo.setPosition(0.1);
                 }
                 sleep((500));
                 robot.gripServo.setPosition(.76);
@@ -335,12 +325,10 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 }
                 robot.turnRobotPower(0);
                 if(false){
-                    robot.leftDragServo.setPosition(.7);
-                    robot.rightDragServo.setPosition(.2);
+                    robot.dragServo.setPosition(.7);
 
                 }else{
-                    robot.leftDragServo.setPosition(0.1);
-                    robot.rightDragServo.setPosition(1);
+                    robot.dragServo.setPosition(0.1);
                 }
 
                 robot.autoMechanumDriveTime(turnPID, false, -1, 0,-90, .5);

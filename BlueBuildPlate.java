@@ -70,12 +70,10 @@ public class BlueBuildPlate extends LinearOpMode {
     robot.backupToPlate(2, .5, 0.65);
 
     if(true){
-      robot.leftDragServo.setPosition(.7);
-      robot.rightDragServo.setPosition(.2);
+      robot.dragServo.setPosition(.7);
 
     }else{
-      robot.leftDragServo.setPosition(0.1);
-      robot.rightDragServo.setPosition(1);
+      robot.dragServo.setPosition(0.1);
     }
     sleep((500));
 
@@ -92,12 +90,10 @@ public class BlueBuildPlate extends LinearOpMode {
     robot.turnRobotPower(0);
 
     if(false){
-      robot.leftDragServo.setPosition(.7);
-      robot.rightDragServo.setPosition(.2);
+      robot.dragServo.setPosition(.7);
 
     }else{
-      robot.leftDragServo.setPosition(0.1);
-      robot.rightDragServo.setPosition(1);
+      robot.dragServo.setPosition(0.1);
     }
     robot.autoMechanumDriveTime(turnPID, false, -1, 0,-90, .5);
 

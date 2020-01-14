@@ -64,8 +64,7 @@ public class DriveTankMT extends LinearOpMode
             {
                 robot.getIntegratedZAxis();
                 robot.autoOpMethods.telemetry.addData("integratedZAxis: ", robot.integratedZAxis);
-                robot.autoOpMethods.telemetry.addData("leftBack: ", robot.backLeftDistanceSensor.getDistance(DistanceUnit.INCH));
-                robot.autoOpMethods.telemetry.addData("rightBack: ", robot.backRightDistanceSensor.getDistance(DistanceUnit.INCH));
+
 
 //                robot.autoOpMethods.telemetry.addData("leftEnc: ", robot.leftFront.getCurrentPosition());
 //                robot.autoOpMethods.telemetry.addData("rightEnc: ", robot.rightFront.getCurrentPosition());
@@ -100,6 +99,7 @@ public class DriveTankMT extends LinearOpMode
                 {
                     if(gamepad2.left_bumper || true){
                         robot.primaryProgram();
+
                     }
 
                     idle();

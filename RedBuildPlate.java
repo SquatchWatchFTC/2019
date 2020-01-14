@@ -69,14 +69,12 @@ public class RedBuildPlate extends LinearOpMode {
 
     robot.backupToPlate(2, .5, 0.65);
 
-    if(true){
-      robot.leftDragServo.setPosition(.7);
-      robot.rightDragServo.setPosition(.2);
+      if(true){
+          robot.dragServo.setPosition(.7);
 
-    }else{
-      robot.leftDragServo.setPosition(0.1);
-      robot.rightDragServo.setPosition(1);
-    }
+      }else{
+          robot.dragServo.setPosition(0.1);
+      }
     sleep((500));
 
 
@@ -91,14 +89,12 @@ public class RedBuildPlate extends LinearOpMode {
     }
     robot.turnRobotPower(0);
 
-    if(false){
-      robot.leftDragServo.setPosition(.7);
-      robot.rightDragServo.setPosition(.2);
+      if(false){
+          robot.dragServo.setPosition(.7);
 
-    }else{
-      robot.leftDragServo.setPosition(0.1);
-      robot.rightDragServo.setPosition(1);
-    }
+      }else{
+          robot.dragServo.setPosition(0.1);
+      }
     robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
 
 

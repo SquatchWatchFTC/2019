@@ -82,8 +82,8 @@ public class RobotTemplate {
     DcMotor flipMotor;
 
     Servo gripServo;
-    Servo leftDragServo;
-    Servo rightDragServo;
+    Servo dragServo;
+
     Servo capstoneServo;
 
     int oldInt = 0;
@@ -99,8 +99,7 @@ int targetPosition = 0;
     //ColorSensor color;
 
     RevTouchSensor LiftTouch;
-    Rev2mDistanceSensor backLeftDistanceSensor;
-    Rev2mDistanceSensor backRightDistanceSensor;
+
     ModernRoboticsI2cRangeSensor wallDistance;
 
     Orientation angles;
@@ -119,28 +118,25 @@ int targetPosition = 0;
         //initMotorsAuto(leftRear, "leftRear");
         //initMotorsAuto(rightRear, "rightRear");
 
-        backLeftDistanceSensor = autoOpMethods.hardwareMap.get(Rev2mDistanceSensor.class, "backLeftDistanceSensor");
-        backRightDistanceSensor = autoOpMethods.hardwareMap.get(Rev2mDistanceSensor.class, "backRightDistanceSensor");
-
         LiftTouch = autoOpMethods.hardwareMap.get(RevTouchSensor.class, "LiftTouch");
         wallDistance = autoOpMethods.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "wallDistance");
 
         leftFront = autoOpMethods.hardwareMap.get(DcMotor.class, "leftFront");
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         rightFront = autoOpMethods.hardwareMap.get(DcMotor.class, "rightFront");
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftRear = autoOpMethods.hardwareMap.get(DcMotor.class, "leftRear");
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         rightRear = autoOpMethods.hardwareMap.get(DcMotor.class, "rightRear");
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftIntake = autoOpMethods.hardwareMap.get(DcMotor.class, "leftFrontIntake");
@@ -164,8 +160,7 @@ int targetPosition = 0;
 
         ledDriver = autoOpMethods.hardwareMap.get(RevBlinkinLedDriver.class, "ledDriver");
 
-        leftDragServo = autoOpMethods.hardwareMap.servo.get("F2");
-        rightDragServo = autoOpMethods.hardwareMap.servo.get("F1");
+        dragServo = autoOpMethods.hardwareMap.servo.get("dragServo");
 
         capstoneServo = autoOpMethods.hardwareMap.servo.get("capstoneServo");
 
@@ -221,8 +216,7 @@ int targetPosition = 0;
 
         ledDriver = teleOpMethods.hardwareMap.get(RevBlinkinLedDriver.class, "ledDriver");
 
-        leftDragServo = teleOpMethods.hardwareMap.servo.get("F2");
-        rightDragServo = teleOpMethods.hardwareMap.servo.get("F1");
+        dragServo = teleOpMethods.hardwareMap.servo.get("dragServo");
 
         capstoneServo = teleOpMethods.hardwareMap.servo.get("capstoneServo");
 
@@ -256,12 +250,18 @@ public double tempAngleVar = 0;
         float rightStickX = autoOpMethods.gamepad1.right_stick_x;
         tempAngleVar += rightStickX*11;
         // Just the value of the x-axis of the right stick.
-        double rightX = turnRobotTeleop(tempAngleVar, pidObject, 1.9, 1.1);
+        double rightX = turnRobotTeleop(tempAngleVar, pidObject, 1.4, 1.1);
 
-        final double frontLeft = r * Math.cos(robotAngle)+(rightX);
-        final double frontRight = r * Math.sin(robotAngle)-(rightX);
-        final double rearLeft = r * Math.sin(robotAngle)+(rightX);
-        final double rearRight = r * Math.cos(robotAngle)-(rightX);
+         double frontLeft = r * Math.cos(robotAngle)+(rightX);
+         double frontRight = r * Math.sin(robotAngle)-(rightX);
+         double rearLeft = r * Math.sin(robotAngle)+(rightX);
+         double rearRight = r * Math.cos(robotAngle)-(rightX);
+        if(autoOpMethods.gamepad1.dpad_left){
+            rearLeft = 0;
+        }else if(autoOpMethods.gamepad1.dpad_right){
+            rearRight = 0;
+        }
+
         if(slow){
             frontLeftMotorPower = frontLeft/2;
             frontRightMotorPower = frontRight/2;
@@ -363,14 +363,14 @@ public double tempAngleVar = 0;
    
 
 
-    if(autoOpMethods.gamepad1.a){
-      leftDragServo.setPosition(.7);
-      rightDragServo.setPosition(.2);
+//    if(autoOpMethods.gamepad1.a){
+//        dragServo.setPosition(0);
+//
+//    }else{
+//        dragServo.setPosition(0.7);
+//    }
 
-    }else{
-      leftDragServo.setPosition(0.1);
-      rightDragServo.setPosition(1);
-    }
+
     }
 
     public void autoMechanumDriveTime(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double timeSeconds){
@@ -608,6 +608,7 @@ public double tempAngleVar = 0;
         pidObject.resetValues();
         resetEncoderWheels();
     }
+    /*
     public void autoMechanumDriveBackLeftSensor(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double inches){
         double startAngle = integratedZAxis;
         double sensorValue = backLeftDistanceSensor.getDistance(DistanceUnit.INCH);
@@ -670,6 +671,8 @@ public double tempAngleVar = 0;
         resetEncoderWheels();
         assignMotorPowers(0, 0, 0, 0);
     }
+    */
+
     public void autoTurnPID(NickPID pidObject, double targetAngle, double threshold, double kP, double kD){
         while(pidObject.previousError > threshold) {
             double motorPower = turnRobotTeleop(targetAngle, pidObject, kP, kD); // default of 1.5 and 1
@@ -735,12 +738,12 @@ public double tempAngleVar = 0;
 
         if (!autoOpMethods.gamepad2.right_bumper){
             if(autoOpMethods.gamepad2.dpad_left){
-                  gripServo.setPosition(.76);
-                  gripServoPos = 0.76;
+                  gripServo.setPosition(0.45); // Open
+                  gripServoPos = 0.3;
             }
             if(autoOpMethods.gamepad2.dpad_right){
-                gripServo.setPosition(0.15);
-                gripServoPos = 0.15;
+                gripServo.setPosition(0.3); // Close
+                gripServoPos = 0.3;
             }
         } else if (autoOpMethods.gamepad2.right_bumper) {
         if (autoOpMethods.gamepad2.dpad_left && gripServoPos > 0) {
@@ -753,7 +756,7 @@ public double tempAngleVar = 0;
         }
 
         if(autoOpMethods.gamepad1.b){
-            capstoneServo.setPosition(1);
+            capstoneServo.setPosition(0.4);
         }else{
             capstoneServo.setPosition(0);
         }
@@ -874,7 +877,9 @@ public double tempAngleVar = 0;
         while(Math.abs(errorTemp) > 3 && autoOpMethods.opModeIsActive()){
             getIntegratedZAxis();
 //            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,4,0.05,6,false)/100);
-            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3.8,0.075,8,false)/100);
+            //turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3.8,0.075,8,false)/100);
+            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3.5,0.05,8,false)/100);
+
 
         }
         turnRobotPower(0);
@@ -913,9 +918,14 @@ public double tempAngleVar = 0;
 
 
         //autoOpMethods.telemetry.addData("Accel: ", accel.xAccel);
-        autoOpMethods.telemetry.addData("Back Left Sensor", backLeftDistanceSensor.getDistance(DistanceUnit.INCH));
-        autoOpMethods.telemetry.addData("Back Right Sensor", backRightDistanceSensor.getDistance(DistanceUnit.INCH));
+
         autoOpMethods.telemetry.update();
+    }
+    public void grabBlock(){
+        gripServo.setPosition(0);
+    }
+    public void releaseBlock(){
+        gripServo.setPosition(0.5);
     }
 
     public float deadZoneReturner ( float y){
@@ -1164,8 +1174,9 @@ public double tempAngleVar = 0;
         }
     }
 
-    public void backupToPlate(double inchesAway, double power, double timeSeconds){
 
+    public void backupToPlate(double inchesAway, double power, double timeSeconds){
+/*
 
         double startTime = autoOpMethods.time;
 
@@ -1176,7 +1187,7 @@ public double tempAngleVar = 0;
             DistanceSensorValue = backRightDistanceSensor.getDistance(DistanceUnit.INCH);
         }else{
             DistanceSensorValue = 10;
-            timeSeconds = 1;
+            timeSeconds = .7;
         }
 
         while ((DistanceSensorValue > inchesAway) && (autoOpMethods.time < startTime + timeSeconds) && autoOpMethods.opModeIsActive()){
@@ -1188,6 +1199,8 @@ public double tempAngleVar = 0;
 
         }
         stopDriveMotors();
+
+ */
     }
 
 
@@ -1195,14 +1208,13 @@ public double tempAngleVar = 0;
     public void automatedPickUpTele( boolean button, int newPosition){
         if(button) {
             int targetPosition = initialLiftEncoderCount + newPosition;
-            gripServo.setPosition(0.76);
+            gripServo.setPosition(0.3);
             sleep(300);
             while((liftMotor.getCurrentPosition() < targetPosition)){
                 liftMotor.setPower(1);
             }
             liftMotor.setPower(0);
             sleep(300);
-            gripServo.setPosition(.15);
         }}
 
     double timeObject = 0;
@@ -1230,7 +1242,7 @@ public double tempAngleVar = 0;
             sleep(500);
             flipMotor.setPower(0);
             
-            gripServo.setPosition(0.76);
+            gripServo.setPosition(0.3);
             sleep(300);
             while (!(LiftTouch.isPressed()) && liftMotor.getCurrentPosition() > initialLiftEncoderCount - safetyStop) {
                 if (liftMotor.getCurrentPosition() >= (initialLiftEncoderCount + 300)) {
@@ -1240,7 +1252,7 @@ public double tempAngleVar = 0;
                 }
             }
             liftMotor.setPower(0);
-            gripServo.setPosition(0.65);
+            gripServo.setPosition(0.45);
 
         }
     }
