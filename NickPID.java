@@ -31,7 +31,6 @@ public class NickPID{
 
     public double basicPIDReturnShush(double targetAngle, double kP, double kI, double kD, boolean telemetryOption){
         double error = targetAngle + robot.integratedZAxis;
-        error = -error;
         robot.errorTemp = error;
         this.P = error;
         this.I += (error*.02);

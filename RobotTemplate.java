@@ -86,10 +86,16 @@ public class RobotTemplate {
 
     Servo capstoneServo;
 
+    Servo leftBlockArm;
+    Servo leftBlockArmGrab;
+
     int oldInt = 0;
     public int tempInt = 0;
     boolean tempBool = false;
 int targetPosition = 0;
+    double previousErrorTemp;
+    double deltaError;
+
 
     RevBlinkinLedDriver ledDriver;
    // AnalogInput extEncoder;
@@ -163,6 +169,9 @@ int targetPosition = 0;
         dragServo = autoOpMethods.hardwareMap.servo.get("dragServo");
 
         capstoneServo = autoOpMethods.hardwareMap.servo.get("capstoneServo");
+
+        leftBlockArm = autoOpMethods.hardwareMap.servo.get("leftBlockArm");
+        leftBlockArmGrab = autoOpMethods.hardwareMap.servo.get("leftBlockArmGrab");
 
     }
 
@@ -488,36 +497,14 @@ public double tempAngleVar = 0;
     public void autoMechanumDriveEncoder(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, double inches){
         double startAngle = integratedZAxis;
         double averageEncoder = 0;
-        while(Math.abs(averageEncoder) < Math.abs(inches)-2 && autoOpMethods.opModeIsActive()) {
+        while(Math.abs(averageEncoder) < Math.abs(inches) && autoOpMethods.opModeIsActive()) {
             averageEncoder = ((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2)/2;
             if (fieldCentric) { // Field-Centric-Mecanum
 
-                double angleOfRobot = integratedZAxis;
-
-
-                double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.6, 0.08, 1.75, true);
-
-                if(magnitude > 1){
-                    magnitude =1;
-                }
-                if(magnitude < -1){
-                    magnitude = -1;
-                }
-
-                magnitude = magnitude * power;
-                double robotAngle = ((-thetaOfTravel)*Math.PI)/180;
-                double rightX = turnRobotTeleopShush( -(thetaOfRotation + startAngle), pidObject, 2.5, 1);
-
-
-
-                frontLeftMotorPower = magnitude * Math.cos(robotAngle) + (rightX * 2);
-                frontRightMotorPower = magnitude * Math.sin(robotAngle) - (rightX * 2);
-                rearLeftMotorPower = magnitude * Math.sin(robotAngle) + (rightX * 2);
-                rearRightMotorPower = magnitude * Math.cos(robotAngle) - (rightX * 2);
 
             } else if (!fieldCentric) { // Robot-Centric Mecanum
 
-                double magnitude = basicPIDReturnGeneral(inches, averageEncoder, 0.25, 0.00, 1, true); // Trig magic
+                double magnitude = -basicPIDReturnGeneral(inches, averageEncoder, 0.2, 0.00, 5, true)/10; // Trig magic
                 if(magnitude > 1){
                     magnitude =1;
                 }
@@ -756,9 +743,29 @@ public double tempAngleVar = 0;
         }
 
         if(autoOpMethods.gamepad1.b){
-            capstoneServo.setPosition(0.4);
+            capstoneServo.setPosition(0.325);
         }else{
             capstoneServo.setPosition(0);
+        }
+
+        //if(autoOpMethods.gamepad1.a){
+        //    dragServo.setPosition(.825);
+        //}else{
+          //  dragServo.setPosition(.3);
+        //}
+
+        if(autoOpMethods.gamepad1.x){
+            leftBlockArm.setPosition(0);
+        }else{
+            leftBlockArm.setPosition(0.5);
+        }
+
+        if(autoOpMethods.gamepad1.y){
+            leftBlockArmGrab.setPosition(1);
+        }else if(autoOpMethods.gamepad1.a){
+            leftBlockArmGrab.setPosition(.4);
+        }else {
+            leftBlockArmGrab.setPosition(0.0);
         }
     }
 
@@ -863,15 +870,14 @@ public double tempAngleVar = 0;
     public void turnRobotAutonomous(int targetAngle, int sleepTime, NickPID pidObject){ // This is an absolute position system. If you say 90 over and over, it'll not move. If you do 90, 180, 270, etc. itll move around in 90 degree increments
         while(Math.abs(errorTemp) > 3 && autoOpMethods.opModeIsActive()){
             getIntegratedZAxis();
-//            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,4,0.05,6,false)/100);
-            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,3.5,0.05,8,false)/100);
-
+            turnRobotPower(pidObject.basicPIDReturnShush(targetAngle ,1.25,0.1,0.5,false)/100);
         }
         turnRobotPower(0);
         pidObject.resetValues();
         resetEncoderWheels();
         sleep(sleepTime);
-        errorTemp = 100;
+        previousErrorTemp = errorTemp;
+        errorTemp = 50;
     }
     public void turnRobotAutonomousRed(int targetAngle, int sleepTime, NickPID pidObject){ // This is an absolute position system. If you say 90 over and over, it'll not move. If you do 90, 180, 270, etc. itll move around in 90 degree increments
         while(Math.abs(errorTemp) > 3 && autoOpMethods.opModeIsActive()){
@@ -906,8 +912,9 @@ public double tempAngleVar = 0;
     double tempDouble1 = 0;
     public void callAllTelemetry(){
         if(true) {
-            //autoOpMethods.telemetry.addData("Current Error: ", errorTemp);
-           // autoOpMethods.telemetry.addData("Average of both: ", Math.abs(((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2))/2);
+            autoOpMethods.telemetry.addData("Current Error: ", errorTemp);
+            autoOpMethods.telemetry.addData("Average of both: ", Math.abs(((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2))/2);
+            autoOpMethods.telemetry.addData("Delta Error ", integratedZAxis);
 
             //autoOpMethods.telemetry.addData("inches to wall: ", getWallDistanceInches());
             //autoOpMethods.telemetry.addData("Back left and right sensors: ", "{Backleft, BackRight} = %.0f, %.0f", backLeftDistanceSensor.getDistance(DistanceUnit.INCH), backRightDistanceSensor.getDistance(DistanceUnit.INCH) );

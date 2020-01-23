@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -41,68 +42,34 @@ public class BlueBuildPlate extends LinearOpMode {
     telemetry.addData("Robot Status:", "Initializing, Please Wait.");
     telemetry.update();
 
+    robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    robot.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    robot.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
     robot.autoInit();
 
 
     NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
     integrationOfAxis imuUpdater = new integrationOfAxis();
 
-
     robot.resetEncoderWheels();
 
-
-      imuUpdater.start();
-
+    imuUpdater.start();
 
     telemetry.addData("Robot Status:", "Initialized.");
     telemetry.update();
 
-
     waitForStart();
-
-            robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 10);
-            robot.turnRobotAutonomous(90, 0, turnPID);
-
-            robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 18);
-
-    robot.turnRobotAutonomous(0, 0, turnPID);
-
-    robot.backupToPlate(2, .5, 0.65);
-
-    if(true){
-      robot.dragServo.setPosition(.7);
-
-    }else{
-      robot.dragServo.setPosition(0.1);
-    }
-    sleep((500));
+    //robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 36);
 
 
-    sleep(1000);
+    //robot.turnRobotAutonomous(90, 2000, turnPID); Its a good boi
 
 
 
-    robot.autoMechanumDriveTime(turnPID, false, 1, 0,0, 1);
-    double case1time = time;
-    while((time <  case1time + 2) && (robot.integratedZAxis > -90)){
-      robot.turnRobotPower(1);
-    }
-    robot.turnRobotPower(0);
-
-    if(false){
-      robot.dragServo.setPosition(.7);
-
-    }else{
-      robot.dragServo.setPosition(0.1);
-    }
-    robot.autoMechanumDriveTime(turnPID, false, -1, 0,-90, .5);
-
-
-
-    robot.autoMechanumDriveTime(turnPID, false, 1, 0,-90, 1.3);
-
-
-    robot.autoMechanumDriveTime(turnPID, false, 1, 90, -90, 2);
+    //robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 18);
 
     imuUpdater.interrupt();
 
