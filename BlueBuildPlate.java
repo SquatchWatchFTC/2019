@@ -63,21 +63,14 @@ public class BlueBuildPlate extends LinearOpMode {
     double robotDriveToWall = robot.getWallDistanceInches() - 3.3;
 
     waitForStart();
+
     robot.readyToGrab();
-    //robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -15, 0.5, 0, true);
     sleep(500);
-//    robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -robotDriveToBlock , 0.3, 0.0, true); // 0.3 and 0.3 for short distances
     robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -26.7 , 0.3, 0.0, true); // 0.3 and 0.3 for short distances
-
-
-
     robot.turnRobotAutonomous(-90, 1000, turnPID,0.35,0.0);
-
-
-
-    sleep(500);
+    sleep(250);
     robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -3, 0.3, 0, true); // 0.3 and 0.3 for short distances\
-    sleep(500);
+    sleep(250);
 
     if(((double)robot.leftColor.red()/(double)robot.leftColor.green())<0.7){
       robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -4, 0.3, 0, true); // 0.3 and 0.3 for short distances\
@@ -86,16 +79,15 @@ public class BlueBuildPlate extends LinearOpMode {
       robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 8, 0.3, 0, true); // 0.3 and 0.3 for short distances\
     }
     sleep(500);
-    if(((double)robot.leftColor.red()/(double)robot.leftColor.green())<0.7 && foundBlock){
+    if(((double)robot.leftColor.red()/(double)robot.leftColor.green())<0.7 && !foundBlock){
       robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -4, 0.3, 0, true); // 0.3 and 0.3 for short distances\
-      blockPos = 3;
-    }else{
+      blockPos = 3; foundBlock = true;
+    }else if (!foundBlock){
       robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -19, 0.3, 0, true); // 0.3 and 0.3 for short distances\
       blockPos = 1;
     }
     sleep(500);
 
-    //robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 3 , 0.3, 0.3); // 0.3 and 0.3 for short distances\
 
       robot.grabLeftArm();
       sleep(750);
@@ -117,10 +109,11 @@ public class BlueBuildPlate extends LinearOpMode {
     sleep(500);
 
     robot.readyToDrop();
-    sleep(1000);
+    sleep(500);
     robot.readyToGrab();
 
     robot.driveLeftArm();
+    robot.turnRobotAutonomous(-90, 250, turnPID,0.35,0.0);
 
     if(blockPos == 1){
       robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 103.5, 1, 0, true); // 0.3 and 0.3 for short distances\
@@ -136,7 +129,7 @@ public class BlueBuildPlate extends LinearOpMode {
     robot.readyToGrab();
     sleep(1000);
 
-    robot.autoMechanumSlideTime(turnPID, false,0.4,-90, 0,1.5);
+    //robot.autoMechanumSlideTime(turnPID, false,0.4,-90, 0,1.5);
 
     robot.turnRobotAutonomous(-90, 250, turnPID, 0.35, 0);
 

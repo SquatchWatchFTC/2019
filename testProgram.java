@@ -44,11 +44,9 @@ public class testProgram extends LinearOpMode {
         telemetry.addData("Robot Status:", "Initializing, Please Wait.");
         telemetry.update();
 
-
         turnPID = new NickPID(robot);
 
         robot.autoInit();
-
 
         integrationOfAxis imuUpdater = new integrationOfAxis();
 
@@ -59,25 +57,17 @@ public class testProgram extends LinearOpMode {
         telemetry.addData("Robot Status:", "Initialized.");
         telemetry.update();
 
-        double robotDriveToBlock = robot.getBlockDistanceInches() -13;
-        double robotDriveToWall = robot.getWallDistanceInches() - 3.3;
-
         waitForStart();
-        runtime.reset();
-        time = runtime.milliseconds();
-
-        robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, 15, 0.3, 0, 25, true); // 0.3 and 0.3 for short distances\
-
-        // robot.autoMechanumSlideTime(turnPID, false,0.4,-90, 0,1);
 
 
-        //robot.newBlockCase(turnPID, robot.blockPosition(turnPID, 5));
+
+        robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, -115, 1, 0, 100, true);
+
+
 
         while(true && robot.autoOpMethods.opModeIsActive()){
 
         }
-
-        //robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 18);
 
         imuUpdater.interrupt();
 

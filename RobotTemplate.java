@@ -543,11 +543,11 @@ public double tempAngleVar = 0;
         double startAngle = integratedZAxis;
         double averageEncoder = 0;
         double previousErrorTemp = 0;
-
-
-
-
+        boolean forward = true;
         powerSlopeBias = power;
+        if(inches < 0){
+            forward = false;
+        }
         while ((((Math.abs(averageEncoder) < Math.abs(inches) - 0.5) || (Math.abs(averageEncoder) > Math.abs(inches) + 0.5)) || Math.abs(pidObject.deltaError) > 0.28) && autoOpMethods.opModeIsActive()) {
             averageEncoder = ((((8 * Math.PI) / 2400) * leftFront.getCurrentPosition() / 2) + ((8 * Math.PI) / 2400) * rightFront.getCurrentPosition() / 2) / 2;
 
@@ -569,23 +569,35 @@ public double tempAngleVar = 0;
             final double rearLeft = magnitude * Math.sin(robotAngle) + (rightX);
             final double rearRight = magnitude * Math.cos(robotAngle) - (rightX);
 
-            frontLeftMotorPower = frontLeft;
-            frontRightMotorPower = frontRight;
-            rearLeftMotorPower = rearLeft;
-            rearRightMotorPower = rearRight;
+            if(forward) {
+                frontLeftMotorPower = frontLeft + powerSlopeBias;
+                frontRightMotorPower = frontRight + powerSlopeBias;
+                rearLeftMotorPower = rearLeft + powerSlopeBias;
+                rearRightMotorPower = rearRight + powerSlopeBias;
+            }
+            if(!forward){
+                frontLeftMotorPower = frontLeft - powerSlopeBias;
+                frontRightMotorPower = frontRight - powerSlopeBias;
+                rearLeftMotorPower = rearLeft - powerSlopeBias;
+                rearRightMotorPower = rearRight - powerSlopeBias;
+            }
 
             previousErrorTemp = pidObject.previousError;
 
 
             assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
-            if(powerSlopeBias <= power) {
+            if((powerSlopeBias <= power) && powerSlopeBias >= 0) {
                 powerSlopeBias -= power / slope;
+            }
+            if(powerSlopeBias < (power/5)){
+                powerSlopeBias = 0;
             }
         }
         pidObject.resetValues();
         if(resetENC) {
             resetEncoderWheels();
         }
+        powerSlopeBias = 0;
         assignMotorPowers(0, 0, 0, 0);
     }
 
