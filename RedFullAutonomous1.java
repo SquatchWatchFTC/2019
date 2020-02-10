@@ -32,6 +32,7 @@ public class RedFullAutonomous1 extends LinearOpMode {
     private RobotTemplate robot;
 
     private double timeout;
+    NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
 
 
 
@@ -45,7 +46,6 @@ public class RedFullAutonomous1 extends LinearOpMode {
         robot.autoInit();
 
 
-        NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
         robot.vuforia = new VuforiaSkystone1920();
         integrationOfAxis imuUpdater = new integrationOfAxis();
         liftThing doLiftPickup = new liftThing(true);
@@ -76,7 +76,7 @@ public class RedFullAutonomous1 extends LinearOpMode {
         //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 16);
 
         robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 20);
-        robot.turnRobotAutonomous(90, 0, turnPID);
+        robot.turnRobotAutonomous(90, 0, turnPID,1,0);
         sleep(500);
         CameraDevice.getInstance().setFlashTorchMode(false);
 
@@ -411,7 +411,7 @@ public class RedFullAutonomous1 extends LinearOpMode {
                 robot.vuforia.vuforiaMain(robot);
 
                 robot.getIntegratedZAxis();
-                robot.callAllTelemetry(); // Do not call telem.update at ALL. It'll freak out.
+                robot.callAllTelemetry(turnPID); // Do not call telem.update at ALL. It'll freak out.
 
                 idle();
             }

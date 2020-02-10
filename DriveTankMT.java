@@ -55,6 +55,7 @@ public class DriveTankMT extends LinearOpMode
 
         intakeAndLift.start();
         robot.liftHeightColor.start();
+     //   robot.teleOpAutoMatedThread.start();
 
 
 
@@ -64,7 +65,7 @@ public class DriveTankMT extends LinearOpMode
             {
                 robot.getIntegratedZAxis();
                 robot.autoOpMethods.telemetry.addData("integratedZAxis: ", robot.integratedZAxis);
-
+                robot.leftRear.getPower();
 
 //                robot.autoOpMethods.telemetry.addData("leftEnc: ", robot.leftFront.getCurrentPosition());
 //                robot.autoOpMethods.telemetry.addData("rightEnc: ", robot.rightFront.getCurrentPosition());
@@ -76,6 +77,7 @@ public class DriveTankMT extends LinearOpMode
         // stop the driving thread.
         intakeAndLift.interrupt();
         robot.liftHeightColor.interrupt();
+     //   robot.teleOpAutoMatedThread.interrupt();
 
 
     }

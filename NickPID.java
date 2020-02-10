@@ -4,6 +4,10 @@ public class NickPID{
     private double P, I, D = 0;
     private double kP, kI, kD = 0;
     public double previousError = 0;
+    public double previousValue = 0;
+    public double currentError = 0;
+    double deltaError = 0;
+
     RobotTemplate robot;
 
     private boolean calcFlag1 = true;
@@ -24,11 +28,33 @@ public class NickPID{
         this.kD = 0;
 
         this.previousError = 0;
+        this.currentError = 0;
         robot.errorTemp = 100;
+        this.deltaError = 0;
+
 
         calcFlag1 = true;
     }
 
+    public double genericPID(double targetValue, double currentValue, double kP, double kD, double bias){
+        currentError = (targetValue - currentValue)/Math.abs(targetValue);
+        robot.errorTemp= currentError;
+
+        currentError = currentError * kP;
+
+        currentError += D*kD;
+        D = (currentError - previousError);
+        if(currentError > 0){
+            currentError += bias;
+        }else{
+            currentError -= bias;
+        }
+
+        deltaError = currentValue - previousValue;
+        previousError = currentError;
+        previousValue = currentValue;
+        return currentError;
+    }
     public double basicPIDReturnShush(double targetAngle, double kP, double kI, double kD, boolean telemetryOption){
         double error = targetAngle + robot.integratedZAxis;
         robot.errorTemp = error;

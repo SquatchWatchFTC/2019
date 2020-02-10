@@ -30,6 +30,7 @@ public class RedBuildPlate extends LinearOpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
   private RobotTemplate robot;
+    NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
 
 
 
@@ -44,7 +45,6 @@ public class RedBuildPlate extends LinearOpMode {
     robot.autoInit();
 
 
-    NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
     integrationOfAxis imuUpdater = new integrationOfAxis();
 
 
@@ -61,11 +61,11 @@ public class RedBuildPlate extends LinearOpMode {
     waitForStart();
 
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 10);
-            robot.turnRobotAutonomous(-90, 0, turnPID);
+            robot.turnRobotAutonomous(-90, 0, turnPID, 1,0);
 
             robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 18);
 
-    robot.turnRobotAutonomous(0, 0, turnPID);
+    robot.turnRobotAutonomous(0, 0, turnPID,1,0);
 
     robot.backupToPlate(2, .5, 0.65);
 
@@ -126,7 +126,7 @@ public class RedBuildPlate extends LinearOpMode {
       while (!isInterrupted())
       {
         robot.getIntegratedZAxis();
-        robot.callAllTelemetry(); // Do not call telem.update at ALL. It'll freak out.
+        robot.callAllTelemetry(turnPID); // Do not call telem.update at ALL. It'll freak out.
 
         idle();
       }

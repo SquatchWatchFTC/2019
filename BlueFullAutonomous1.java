@@ -33,6 +33,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
   private double timeout;
 
+  NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
 
 
 
@@ -45,7 +46,6 @@ public class BlueFullAutonomous1 extends LinearOpMode {
     robot.autoInit();
 
 
-    NickPID turnPID = new NickPID(robot); // For the love of god don't forget to feed in robot object
     robot.vuforia = new VuforiaSkystone1920();
     integrationOfAxis imuUpdater = new integrationOfAxis();
     liftThing doLiftPickup = new liftThing(true);
@@ -76,7 +76,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
       //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 16);
 
       robot.autoMechanumDriveEncoder(turnPID, false, 1, 0, 0, 20);
-      robot.turnRobotAutonomous(90, 0, turnPID);
+      robot.turnRobotAutonomous(90, 0, turnPID,1,0);
       sleep(500);
     CameraDevice.getInstance().setFlashTorchMode(false);
 
@@ -85,16 +85,16 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 
             robot.autoMechanumDriveEncoder(turnPID, false, -0.5, 0, 0, 5);
-            robot.turnRobotAutonomous(5, 0, turnPID);
-            robot.turnRobotAutonomous(0, 0, turnPID);
+            robot.turnRobotAutonomous(5, 0, turnPID,1,0);
+            robot.turnRobotAutonomous(0, 0, turnPID,1,0);
 
             robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23);
 
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
-            robot.turnRobotAutonomous(-75, 0, turnPID);
+            robot.turnRobotAutonomous(-75, 0, turnPID,1,0);
 
-            robot.turnRobotAutonomous(90, 0, turnPID);
+            robot.turnRobotAutonomous(90, 0, turnPID,1,0);
 //
 
             robot.intake(true, false, 0.73);
@@ -103,9 +103,9 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             sleep(800);
             robot.intake(false, false, 0.5);
 //
-            robot.turnRobotAutonomous(30, 0, turnPID);
+            robot.turnRobotAutonomous(30, 0, turnPID,1,0);
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
-            robot.turnRobotAutonomous(90, 0, turnPID);
+            robot.turnRobotAutonomous(90, 0, turnPID,1,0);
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
 
@@ -113,7 +113,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             doLiftPickup.start();
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 24);
 
-            robot.turnRobotAutonomous(180, 0, turnPID);
+            robot.turnRobotAutonomous(180, 0, turnPID,1,0);
             robot.backupToPlate(2, .5, 0.65);
 
 
@@ -145,7 +145,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             }
             robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
             while(runtime.milliseconds() < 28600 && opModeIsActive()) {
-              robot.turnRobotAutonomous(80, 0, turnPID);
+              robot.turnRobotAutonomous(80, 0, turnPID,1,0);
             }
 
 
@@ -192,13 +192,13 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             telemetry.addLine("case 2");
             robot.autoMechanumDriveEncoder(turnPID, false, .65, 0, 0, 11);
 
-            robot.turnRobotAutonomous(5, 0, turnPID);
-            robot.turnRobotAutonomous(0, 0, turnPID);
+            robot.turnRobotAutonomous(5, 0, turnPID,1,0);
+            robot.turnRobotAutonomous(0, 0, turnPID,1,0);
 
             robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23.5);
 
-            robot.turnRobotAutonomous(-75, 0, turnPID);
-            robot.turnRobotAutonomous(90, 0, turnPID);
+            robot.turnRobotAutonomous(-75, 0, turnPID,1,0);
+            robot.turnRobotAutonomous(90, 0, turnPID,1,0);
 
             robot.intake(true, false, 0.73);
             robot.autoMechanumDriveTime(turnPID, false, 0.5, 0,90, 1);
@@ -206,15 +206,15 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             sleep(800);
             robot.intake(false, false, 0.5);
 
-            robot.turnRobotAutonomous(45, 0, turnPID);
+            robot.turnRobotAutonomous(45, 0, turnPID,1,0);
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 15.5);
-            robot.turnRobotAutonomous(90, 0, turnPID);
+            robot.turnRobotAutonomous(90, 0, turnPID,1,0);
 
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 44);
             doLiftPickup.start();
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 20);
 
-            robot.turnRobotAutonomous(180, 0, turnPID);
+            robot.turnRobotAutonomous(180, 0, turnPID,1,0);
             robot.backupToPlate(2, .5, .65);
 
 
@@ -247,7 +247,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
             robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
 
-            robot.turnRobotAutonomous(80, 0, turnPID);
+            robot.turnRobotAutonomous(80, 0, turnPID,1,0);
 
 
           robot.autoMechanumDriveTime(turnPID, false, 1, 0,80, 1.4);
@@ -262,16 +262,16 @@ public class BlueFullAutonomous1 extends LinearOpMode {
 
 
             robot.autoMechanumDriveEncoder(turnPID, false, 0.5, 0, 0, 1.75);
-            robot.turnRobotAutonomous(5, 0, turnPID);
-            robot.turnRobotAutonomous(0, 0, turnPID);
+            robot.turnRobotAutonomous(5, 0, turnPID,1,0);
+            robot.turnRobotAutonomous(0, 0, turnPID,1,0);
 
             robot.autoMechanumDriveEncoder(turnPID, false, 0.45, 0, 0, 23);
 
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, 0.75, "left", 38);
-            robot.turnRobotAutonomous(-75, 0, turnPID);
+            robot.turnRobotAutonomous(-75, 0, turnPID,1,0);
 
-            robot.turnRobotAutonomous(90, 0, turnPID);
+            robot.turnRobotAutonomous(90, 0, turnPID,1,0);
 //
 
             robot.intake(true, false, 0.73);
@@ -280,9 +280,9 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             sleep(800);
             robot.intake(false, false, 0.5);
 //
-            robot.turnRobotAutonomous(30, 0, turnPID);
+            robot.turnRobotAutonomous(30, 0, turnPID,1,0);
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 9);
-            robot.turnRobotAutonomous(90, 0, turnPID);
+            robot.turnRobotAutonomous(90, 0, turnPID,1,0);
 
             //robot.autoStrafeDistanceSensorLeftorRight(turnPID, -0.75, "right", 23);
 
@@ -290,7 +290,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             doLiftPickup.start();
             robot.autoMechanumDriveEncoder(turnPID, false, -1, 0, 0, 33);
 
-            robot.turnRobotAutonomous(180, 0, turnPID);
+            robot.turnRobotAutonomous(180, 0, turnPID,1,0);
             robot.backupToPlate(2, .5, 0.75);
 
 
@@ -324,7 +324,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
             robot.autoMechanumDriveTime(turnPID, false, -1, 0,90, .5);
 
 
-            robot.turnRobotAutonomous(80, 0, turnPID);
+            robot.turnRobotAutonomous(80, 0, turnPID ,1,0);
 
             robot.autoMechanumDriveTime(turnPID, false, 1, 0,80, 1.4);
 
@@ -402,7 +402,7 @@ public class BlueFullAutonomous1 extends LinearOpMode {
           robot.vuforia.vuforiaMain(robot);
 
         robot.getIntegratedZAxis();
-        robot.callAllTelemetry(); // Do not call telem.update at ALL. It'll freak out.
+        robot.callAllTelemetry(turnPID); // Do not call telem.update at ALL. It'll freak out.
 
         idle();
       }
