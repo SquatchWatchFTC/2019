@@ -50,6 +50,7 @@ public class testProgram extends LinearOpMode {
 
         integrationOfAxis imuUpdater = new integrationOfAxis();
 
+        servoMove servoTest = new servoMove(10, false);
         robot.resetEncoderWheels();
 
         imuUpdater.start();
@@ -57,18 +58,73 @@ public class testProgram extends LinearOpMode {
         telemetry.addData("Robot Status:", "Initialized.");
         telemetry.update();
 
+        //robot.readyToGrab();
+
+        robot.rightDrop();
+        robot.leftDrop();
         waitForStart();
+        robot.rightDropOpen();
+        robot.leftDropOpen();
+
+//        robot.turnRobotAutonomous(90, 0, turnPID, 0.75,0);
+//
+//
+//        robot.turnRobotAutonomous(180,0, turnPID, 0.75, 0);
+//
+//        robot.turnRobotAutonomous(90, 0, turnPID, 0.75,0);
 
 
+        //robot.turnRobotAutonomous(0,3000,turnPID, 0.08,0);
 
-        robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, -115, 1, 0, 100, true);
-
-
-
-        while(true && robot.autoOpMethods.opModeIsActive()){
+        /*
+        robot.turnRobotAutonomous(90, 0, turnPID, 0.75,0);
+        robot.turnRobotAutonomous(0,0, turnPID, 0.75, 0);
+        robot.turnRobotAutonomous(-90, 0, turnPID, 0.75,0);
+        robot.turnRobotAutonomous(0,90000, turnPID, 0.75, 0);
+*/
+        while(opModeIsActive()){
 
         }
+        while(robot.blockDistance.getDistance(DistanceUnit.INCH) >= 1 && opModeIsActive()){
+            robot.assignMotorPowers(0.2,0.2,0.2,0.2);
+        }   robot.assignMotorPowers(0,0,0,0);
+        robot.dragServo.setPosition(1);
+        sleep(750);
+        while(Math.abs(((((8*Math.PI)/2400)*robot.leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*robot.rightFront.getCurrentPosition()/2)/2) < 13 && opModeIsActive()){
+            robot.assignMotorPowers(-1,-1,-1,-1);
+        }
+        robot.assignMotorPowers(0, 0, 0, 0);
+        sleep(250);
+        while(robot.integratedZAxis < -10 && opModeIsActive()){
+            robot.assignMotorPowers(1,-1,0,-1);
 
+        }        robot.assignMotorPowers(0,0,0,0);
+        robot.dragServo.setPosition(0.25);
+        robot.resetEncoderWheels();
+
+        robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 38, 0.6, 0, true); // 0.3 and 0.3 for short distances\
+      //  robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, 20, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
+
+
+
+
+
+
+        //robot.autoMechanumSlideTime(turnPID, false,1,-90, 0,0.2);
+
+        //robot.turnRobotAutonomous(-2, 0, turnPID, .02, 0);
+
+
+        //robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, -110, 1.5, 0, 100, true);
+
+        //robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, 110, 1.5, 0, 100, true);
+
+        //robot.autoMechanumSlideDistance(turnPID,false,1,-90,0,robot.leftDistance,6);
+
+
+        while(opModeIsActive()){
+
+        }
         imuUpdater.interrupt();
 
     }
@@ -115,7 +171,7 @@ public class testProgram extends LinearOpMode {
             while (!isInterrupted())
             {
                 if(pickupFlag && thing) {
-                    robot.automatedPickUpTele(thing, 350);
+                    //robot.automatedPickUpTele(thing, 350);
                     try {
                         Thread.sleep(500);
                     } catch(InterruptedException e) {
@@ -138,13 +194,46 @@ public class testProgram extends LinearOpMode {
                     }
                     robot.flipMotor.setPower(0);
 
-                    robot.automatedCarriageReturnTele(thing, 0);
+                   // robot.automatedCarriageReturnTele(thing, 0);
                     thing = false;
                 }
                 idle();
             }
         }
     }
+
+    private class servoMove extends Thread
+    {
+        double distance;
+        boolean grab;
+        public servoMove(double distanceTilActivation, boolean grabBlock)
+        {
+            this.setName("servoThing");
+            distance = distanceTilActivation;
+            grab = grabBlock;
+        }
+
+
+        @Override
+        public void run()
+        {
+            boolean thing = false;
+
+            while (!isInterrupted() && !thing)
+            {
+                if(Math.abs(((((8*Math.PI)/2400)*robot.leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*robot.rightFront.getCurrentPosition()/2)/2) > Math.abs(distance)){
+                    if(grab){
+                        robot.leftDrop();
+                    }else{
+                        robot.grabLeftArm();
+                    }
+                    thing = true;
+                }
+                idle();
+            }
+        }
+    }
+
 
 
 }

@@ -7,6 +7,8 @@ public class NickPID{
     public double previousValue = 0;
     public double currentError = 0;
     double deltaError = 0;
+    double staticCurrentValue = 0;
+    boolean loopFlag = false;
 
     RobotTemplate robot;
 
@@ -32,17 +34,22 @@ public class NickPID{
         robot.errorTemp = 100;
         this.deltaError = 0;
 
+        staticCurrentValue = 0;
+        loopFlag = false;
 
         calcFlag1 = true;
     }
 
     public double genericPID(double targetValue, double currentValue, double kP, double kD, double bias){
-        currentError = (targetValue - currentValue)/Math.abs(targetValue);
+        if(!loopFlag){
+            staticCurrentValue = currentValue;
+            loopFlag = true;
+        }
+        currentError = (targetValue - currentValue)/Math.abs(targetValue-staticCurrentValue);
         robot.errorTemp= currentError;
 
         currentError = currentError * kP;
 
-        currentError += D*kD;
         D = (currentError - previousError);
         if(currentError > 0){
             currentError += bias;

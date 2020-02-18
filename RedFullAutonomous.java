@@ -1,0 +1,250 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+
+@Autonomous(name = "Red Full Autonomous", group = "ready")
+//@Disabled
+public class RedFullAutonomous extends LinearOpMode {
+
+  private ElapsedTime runtime = new ElapsedTime();
+  private RobotTemplate robot;
+  NickPID turnPID; // For the love of god don't forget to feed in robot object
+  private int blockPos = 0;
+  private boolean foundBlock = false;
+
+
+
+
+  @Override
+  public void runOpMode(){
+    robot = new RobotTemplate(this);
+    telemetry.addData("Robot Status:", "Initializing, Please Wait.");
+    telemetry.update();
+
+    turnPID = new NickPID(robot);
+
+    robot.autoInit();
+
+    integrationOfAxis imuUpdater = new integrationOfAxis();
+
+    servoMove startServoMove = new servoMove(1, false);
+    servoMove servoMove1stPassBack;
+    servoMove servoMove2ndPass;
+    servoMove servoMove1stPass;
+    servoMove servoLastFunkyTurn = new servoMove(-1, false);
+    robot.resetEncoderWheels();
+
+    robot.initVoltage = robot.getBatteryVoltage();
+
+    imuUpdater.start();
+
+    telemetry.addData("Robot Status:", "Initialized.");
+    telemetry.update();
+    robot.storeRightArm();
+    robot.storeLeftArm();
+
+    waitForStart();
+    startServoMove.start();
+    robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, -26.2 , 0.5, 0.0, 10,true); // 0.3 and 0.3 for short distances
+    robot.turnRobotAutonomous(90, 0, turnPID,0.52,0.0);
+    robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -3, 0.3, 0, true); // 0.3 and 0.3 for short distances\
+
+    if(((double)robot.rightColor.red()/(double)robot.rightColor.green())<0.8){
+      robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -2, 0.3, 0, true); // 0.3 and 0.3 for short distances\
+      blockPos = 2; foundBlock = true;
+    }else{
+      robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 8, 0.4, 0, true); // 0.3 and 0.3 for short distances\
+    }
+    //sleep(500);
+    if(((double)robot.rightColor.red()/(double)robot.rightColor.green())<0.8 && !foundBlock){
+      robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -2, 0.3, 0, true); // 0.3 and 0.3 for short distances\
+      blockPos = 3; foundBlock = true;
+    }else if (!foundBlock){
+      robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 7, 0.4, 0, true); // 0.3 and 0.3 for short distances\
+      blockPos = 1;
+    }
+    //sleep(500);
+
+      robot.rightReadyToDrop();
+      sleep(500);
+      robot.driveRightArm();
+      if(blockPos == 1){
+        servoMove1stPass = new servoMove(65, true);
+      }else if(blockPos ==2){
+         servoMove1stPass = new servoMove(54, true);
+      }else {
+        servoMove1stPass = new servoMove(46, true);
+      }
+
+
+    servoMove1stPass.start();
+    if(blockPos == 1){
+      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -95, 1.3, 0,40, true); // 0.3 and 0.3 for short distances\
+    }else if( blockPos == 2){
+      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -79, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
+    }else if(blockPos == 3){
+      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -87, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
+    }
+    if(blockPos == 1){
+      servoMove1stPassBack = new servoMove(70, false);
+    }else if(blockPos == 2){
+      servoMove1stPassBack  = new servoMove(100, false);
+    }else {
+      servoMove1stPassBack  = new servoMove(110, false);
+    }
+
+    servoMove1stPassBack.start();
+    if(blockPos == 1){
+      robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0.5, 71, 1.3, 0,40, true); // 0.3 and 0.3 for short distances\
+    }else if( blockPos == 2){
+      robot.autonomousNewMechDriveGradual(turnPID, 1, 0, -0.2, 106, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
+    }else if(blockPos == 3){
+      robot.autonomousNewMechDriveGradual(turnPID, 1, 0, -0.2, 112, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
+    }
+    //robot.autoMechanumSlideTime(turnPID, false,1,90, 0,0.2);
+    //robot.turnRobotAutonomous(-2, 0, turnPID, .02, 0);
+
+    servoLastFunkyTurn.start();
+    robot.turnRobotAutonomous(80, 0, turnPID,0.12,0.0);
+
+    robot.turnRobotAutonomous(90, 0, turnPID,0.12,0.0);
+
+    robot.rightReadyToDrop();
+    sleep(500);
+    robot.driveRightArm();
+    if(blockPos == 1){
+      servoMove2ndPass = new servoMove(30, true);
+    }else if(blockPos == 2){
+      servoMove2ndPass = new servoMove(50, true);
+    }else{
+      servoMove2ndPass = new servoMove(58, true);
+    }
+
+    servoMove2ndPass.start();
+    if(blockPos == 1){
+      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -71, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
+    }else if( blockPos == 2){
+      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -100, 1.7, 0, 40, true); // 0.3 and 0.3 for short distances\
+    }else if(blockPos == 3){
+      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -110.5, 1.7, 0, 40, true); // 0.3 and 0.3 for short distances\
+    }
+
+
+
+    servoLastFunkyTurn.interrupt();
+    servoMove2ndPass.interrupt();
+    servoMove1stPass.interrupt();
+    servoMove1stPassBack.interrupt();
+    startServoMove.interrupt();
+
+    robot.turnRobotAutonomous(0, 0, turnPID, 0.56,0);
+
+    while(robot.blockDistance.getDistance(DistanceUnit.INCH) >= 1 && opModeIsActive()){
+      robot.assignMotorPowers(0.2,0.2,0.2,0.2);
+    }   robot.assignMotorPowers(0,0,0,0);
+    robot.dragServo.setPosition(1);
+    sleep(750);
+    while(Math.abs(((((8*Math.PI)/2400)*robot.leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*robot.rightFront.getCurrentPosition()/2)/2) < 13 && opModeIsActive()){
+      robot.assignMotorPowers(-1,-1,-1,-1);
+    }
+    robot.assignMotorPowers(0, 0, 0, 0);
+    robot.storeLeftArmTele();
+    robot.storeRightArmTele();
+    sleep(250);
+    while(robot.integratedZAxis > -92 && opModeIsActive()){
+      robot.assignMotorPowers(-1,1,-1,0);
+
+    }
+    robot.dragServo.setPosition(0.25);
+
+    robot.assignMotorPowers(1,1,0,0);
+    sleep(750);
+    robot.assignMotorPowers(0, 0, 0, 0);
+
+
+    robot.resetEncoderWheels();
+
+    robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 38, 0.6, 0, true); // 0.3 and 0.3 for short distances\
+
+    imuUpdater.interrupt();
+
+  }
+
+
+
+
+  private class integrationOfAxis extends Thread
+  {
+    public integrationOfAxis()
+    {
+      this.setName("integratedZAxisThread");
+    }
+
+    @Override
+    public void run()
+    {
+      while (!isInterrupted())
+      {
+        robot.getIntegratedZAxis();
+        robot.callAllTelemetry(turnPID); // Do not call telem.update at ALL. It'll freak out.
+
+        idle();
+      }
+    }
+  }
+
+
+
+
+  private class servoMove extends Thread
+  {
+    double distance;
+    boolean grab;
+    public servoMove(double distanceTilActivation, boolean grabBlock)
+    {
+      this.setName("servoThing");
+      distance = distanceTilActivation;
+      grab = grabBlock;
+    }
+
+
+    @Override
+    public void run()
+    {
+      boolean thing = false;
+
+      while (!isInterrupted() && !thing)
+      {
+        if(Math.abs(((((8*Math.PI)/2400)*robot.leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*robot.rightFront.getCurrentPosition()/2)/2) > (distance)){
+          if(grab){
+            robot.rightDrop();
+            try {
+              Thread.sleep(750);
+            } catch(InterruptedException e) {
+              System.out.println("got interrupted!: " + e);
+            }
+            robot.rightDropOpen();
+            try {
+              Thread.sleep(350);
+            } catch(InterruptedException e) {
+              System.out.println("got interrupted!: " + e);
+            }
+            robot.driveRightArm();
+
+          }else{
+            robot.rightReadyToGrab();
+          }
+          thing = true;
+        }
+        idle();
+      }
+    }
+  }
+
+
+}

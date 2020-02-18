@@ -99,10 +99,9 @@ public class DriveTankMT extends LinearOpMode
 
                 while (!isInterrupted())
                 {
-                    if(gamepad2.left_bumper || true){
-                        robot.primaryProgram();
 
-                    }
+                    robot.primaryProgram();
+
 
                     idle();
 
@@ -113,4 +112,7 @@ public class DriveTankMT extends LinearOpMode
 
         }
     }
+
 }
+
+
