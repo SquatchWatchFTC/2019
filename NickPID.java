@@ -40,7 +40,7 @@ public class NickPID{
         calcFlag1 = true;
     }
 
-    public double genericPID(double targetValue, double currentValue, double kP, double kD, double bias){
+    public double genericPID(double targetValue, double currentValue, double kP, double kI, double kD, double bias){
         if(!loopFlag){
             staticCurrentValue = currentValue;
             loopFlag = true;
@@ -48,19 +48,40 @@ public class NickPID{
         currentError = (targetValue - currentValue)/Math.abs(targetValue-staticCurrentValue);
         robot.errorTemp= currentError;
 
-        currentError = currentError * kP;
+        P = currentError;
 
-        D = (currentError - previousError);
-        if(currentError > 0){
-            currentError += bias;
+        I += currentError/100000;
+
+        D = (currentError - previousError)/100;
+
+        if(I > 0.30){
+            I=0.3;
+        }else if(I < -0.3){
+            I=-0.3;
+        }
+
+
+
+
+
+        double totalError = (P * kP) + (I * kI) + (D * kD);
+
+        if(totalError > 0){
+            totalError += bias;
         }else{
-            currentError -= bias;
+            totalError -= bias;
+        }
+
+        if(totalError > 1){
+            totalError = 1;
+        }else if(totalError < -1){
+            totalError = -1;
         }
 
         deltaError = currentValue - previousValue;
         previousError = currentError;
         previousValue = currentValue;
-        return currentError;
+        return totalError;
     }
     public double basicPIDReturnShush(double targetAngle, double kP, double kI, double kD, boolean telemetryOption){
         double error = targetAngle + robot.integratedZAxis;

@@ -55,76 +55,52 @@ public class testProgram extends LinearOpMode {
 
         imuUpdater.start();
 
+        robot.initVoltage = robot.getBatteryVoltage();
+
+
         telemetry.addData("Robot Status:", "Initialized.");
         telemetry.update();
 
         //robot.readyToGrab();
 
-        robot.rightDrop();
-        robot.leftDrop();
+        robot.rightReadyToGrab();
         waitForStart();
-        robot.rightDropOpen();
-        robot.leftDropOpen();
 
-//        robot.turnRobotAutonomous(90, 0, turnPID, 0.75,0);
-//
-//
-//        robot.turnRobotAutonomous(180,0, turnPID, 0.75, 0);
-//
-//        robot.turnRobotAutonomous(90, 0, turnPID, 0.75,0);
+        double power = (((-0.2*1.01)*robot.initVoltage)+3.4);
+        double deriv = 0;
 
 
-        //robot.turnRobotAutonomous(0,3000,turnPID, 0.08,0);
+
+        robot.rightReadyToGrabExtend();
+        sleep(5000);
+        robot.rightReadyToDrop();
+        sleep(500);
+
+
 
         /*
-        robot.turnRobotAutonomous(90, 0, turnPID, 0.75,0);
-        robot.turnRobotAutonomous(0,0, turnPID, 0.75, 0);
-        robot.turnRobotAutonomous(-90, 0, turnPID, 0.75,0);
-        robot.turnRobotAutonomous(0,90000, turnPID, 0.75, 0);
+        robot.turnRobotAutonomous(90, 0, turnPID, power,deriv,2);
+
+        robot.turnRobotAutonomous(180,0, turnPID, power, deriv,2);
+
+        robot.turnRobotAutonomous(90, 0, turnPID, power,deriv,2);
+
+        robot.turnRobotAutonomous(0,0, turnPID, power, deriv,2);
+
+        robot.turnRobotAutonomous(-90, 0, turnPID, power,deriv,2);
+
+        robot.turnRobotAutonomous(-180, 0, turnPID, power,deriv,2);
+
+        robot.turnRobotAutonomous(0, 0, turnPID, power+0.5,deriv,2);
+
+
+
+        robot.turnRobotAutonomous(10, 0, turnPID, power/6,deriv,3);
+
+        robot.turnRobotAutonomous(0,0, turnPID, power/6, deriv,2);
+
 */
-        while(opModeIsActive()){
 
-        }
-        while(robot.blockDistance.getDistance(DistanceUnit.INCH) >= 1 && opModeIsActive()){
-            robot.assignMotorPowers(0.2,0.2,0.2,0.2);
-        }   robot.assignMotorPowers(0,0,0,0);
-        robot.dragServo.setPosition(1);
-        sleep(750);
-        while(Math.abs(((((8*Math.PI)/2400)*robot.leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*robot.rightFront.getCurrentPosition()/2)/2) < 13 && opModeIsActive()){
-            robot.assignMotorPowers(-1,-1,-1,-1);
-        }
-        robot.assignMotorPowers(0, 0, 0, 0);
-        sleep(250);
-        while(robot.integratedZAxis < -10 && opModeIsActive()){
-            robot.assignMotorPowers(1,-1,0,-1);
-
-        }        robot.assignMotorPowers(0,0,0,0);
-        robot.dragServo.setPosition(0.25);
-        robot.resetEncoderWheels();
-
-        robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 38, 0.6, 0, true); // 0.3 and 0.3 for short distances\
-      //  robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, 20, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
-
-
-
-
-
-
-        //robot.autoMechanumSlideTime(turnPID, false,1,-90, 0,0.2);
-
-        //robot.turnRobotAutonomous(-2, 0, turnPID, .02, 0);
-
-
-        //robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, -110, 1.5, 0, 100, true);
-
-        //robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, 110, 1.5, 0, 100, true);
-
-        //robot.autoMechanumSlideDistance(turnPID,false,1,-90,0,robot.leftDistance,6);
-
-
-        while(opModeIsActive()){
-
-        }
         imuUpdater.interrupt();
 
     }

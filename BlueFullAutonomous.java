@@ -50,11 +50,11 @@ public class BlueFullAutonomous extends LinearOpMode {
 
     integrationOfAxis imuUpdater = new integrationOfAxis();
 
-    servoMove startServoMove = new servoMove(1, false);
+    servoMove startServoMove = new servoMove(1, false, 0);
     servoMove servoMove1stPassBack;
     servoMove servoMove2ndPass;
     servoMove servoMove1stPass;
-    servoMove servoLastFunkyTurn = new servoMove(-1, false);
+    servoMove servoLastFunkyTurn = new servoMove(-1, false,0);
     robot.resetEncoderWheels();
 
     robot.initVoltage = robot.getBatteryVoltage();
@@ -63,13 +63,23 @@ public class BlueFullAutonomous extends LinearOpMode {
 
     telemetry.addData("Robot Status:", "Initialized.");
     telemetry.update();
-    robot.storeRightArm();
-    robot.storeLeftArm();
+
+    robot.rightBlockArm.setPosition(0.75);
+    robot.rightBlockArmGrab.setPosition(1);
+    robot.leftBlockArm.setPosition(0.75);
+    robot.leftBlockArmGrab.setPosition(0.5);
+//    robot.storeRightArm();
+//    robot.storeLeftArm();
+
+    double power =(((-0.2*1.01)*robot.initVoltage)+3.5);
+    double deriv = 0;
+
 
     waitForStart();
+
     startServoMove.start();
-    robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, -25.8 , 0.5, 0.0, 10,true); // 0.3 and 0.3 for short distances
-    robot.turnRobotAutonomous(-90, 0, turnPID,0.52,0.0);
+    robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, -25.8 , power/1.4, 0.0, 10,true); // 0.3 and 0.3 for short distances
+    robot.turnRobotAutonomous(-90, 0, turnPID,power/1.5,deriv,2);
     robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -3, 0.3, 0, true); // 0.3 and 0.3 for short distances\
 
     if(((double)robot.leftColor.red()/(double)robot.leftColor.green())<0.7){
@@ -80,27 +90,28 @@ public class BlueFullAutonomous extends LinearOpMode {
     }
     //sleep(500);
     if(((double)robot.leftColor.red()/(double)robot.leftColor.green())<0.7 && !foundBlock){
-      robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -4, 0.4, 0, true); // 0.3 and 0.3 for short distances\
+      robot.autonomousNewMechDrive(turnPID, 1, 0, 0, -4, 0.3, 0, true); // 0.3 and 0.3 for short distances\
       blockPos = 3; foundBlock = true;
     }else if (!foundBlock){
       robot.autonomousNewMechDrive(turnPID, 1, 0, 0, 5, 0.4, 0, true); // 0.3 and 0.3 for short distances\
       blockPos = 1;
     }
     //sleep(500);
-
+      robot.leftReadyToGrabExtend();
+      sleep(250);
       robot.leftReadyToDrop();
       sleep(500);
       robot.driveLeftArm();
       if(blockPos == 1){
-        servoMove1stPass = new servoMove(65, true);
+        servoMove1stPass = new servoMove(65, true,0);
       }else if(blockPos ==2){
-         servoMove1stPass = new servoMove(54, true);
+         servoMove1stPass = new servoMove(54, true,0);
       }else {
-        servoMove1stPass = new servoMove(46, true);
+        servoMove1stPass = new servoMove(46, true,0);
       }
 
 
-    servoMove1stPass.start();
+    servoMove1stPass.start();// First drive up with block, primes arm to  go out and drop block
     if(blockPos == 1){
       robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -95, 1.3, 0,40, true); // 0.3 and 0.3 for short distances\
     }else if( blockPos == 2){
@@ -108,15 +119,16 @@ public class BlueFullAutonomous extends LinearOpMode {
     }else if(blockPos == 3){
       robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -87, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
     }
+
     if(blockPos == 1){
-      servoMove1stPassBack = new servoMove(64, false);
+      servoMove1stPassBack = new servoMove(70, false,100);
     }else if(blockPos == 2){
-      servoMove1stPassBack  = new servoMove(96, false);
+      servoMove1stPassBack  = new servoMove(105, false,100);
     }else {
-      servoMove1stPassBack  = new servoMove(104, false);
+      servoMove1stPassBack  = new servoMove(113, false,100);
     }
 
-    servoMove1stPassBack.start();
+    servoMove1stPassBack.start(); // After placing 1st block, returning to get the second, primes to put arm out right when it gets to the block
     if(blockPos == 1){
       robot.autonomousNewMechDriveGradual(turnPID, 1, 0, 0, 71, 1.3, 0,40, true); // 0.3 and 0.3 for short distances\
     }else if( blockPos == 2){
@@ -127,25 +139,20 @@ public class BlueFullAutonomous extends LinearOpMode {
     //robot.autoMechanumSlideTime(turnPID, false,1,90, 0,0.2);
     //robot.turnRobotAutonomous(-2, 0, turnPID, .02, 0);
 
-    servoLastFunkyTurn.start();
-    robot.turnRobotAutonomous(-80, 0, turnPID,0.12,0.0);
+    robot.turnRobotAutonomous(-80, 0, turnPID,power/6,deriv,3);
 
-    robot.turnRobotAutonomous(-90, 0, turnPID,0.12,0.0);
+    robot.turnRobotAutonomous(-91, 0, turnPID,power/6,deriv,2);// Butt wiggle to put arm down
 
-    robot.leftReadyToDrop();
+    robot.leftReadyToGrabExtend();
+    sleep(250);
+    robot.leftReadyToDrop(); // 2nd block pickup
     sleep(500);
     robot.driveLeftArm();
-    if(blockPos == 1){
-      servoMove2ndPass = new servoMove(30, true);
-    }else if(blockPos == 2){
-      servoMove2ndPass = new servoMove(50, true);
-    }else{
-      servoMove2ndPass = new servoMove(58, true);
-    }
 
-    servoMove2ndPass.start();
+    servoMove2ndPass = new servoMove(-1, true, 0);
+
     if(blockPos == 1){
-      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -71, 1.3, 0, 40,true); // 0.3 and 0.3 for short distances\
+      robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -69, 1.7, 0, 40,true); // 0.3 and 0.3 for short distances\
     }else if( blockPos == 2){
       robot.autonomousNewMechDriveGradualLoose(turnPID, 1, 0, 0, -100, 1.7, 0, 40, true); // 0.3 and 0.3 for short distances\
     }else if(blockPos == 3){
@@ -154,13 +161,11 @@ public class BlueFullAutonomous extends LinearOpMode {
 
 
 
-    servoLastFunkyTurn.interrupt();
-    servoMove2ndPass.interrupt();
     servoMove1stPass.interrupt();
     servoMove1stPassBack.interrupt();
     startServoMove.interrupt();
 
-    robot.turnRobotAutonomous(0, 0, turnPID, 0.56,0);
+    robot.turnRobotAutonomous(0, 0, turnPID, power,deriv,6);
 
     while(robot.blockDistance.getDistance(DistanceUnit.INCH) >= 1 && opModeIsActive()){
       robot.assignMotorPowers(0.2,0.2,0.2,0.2);
@@ -178,6 +183,8 @@ public class BlueFullAutonomous extends LinearOpMode {
       robot.assignMotorPowers(1,-1,0,-1);
 
     }
+    servoMove2ndPass.start();
+
     robot.dragServo.setPosition(0.25);
     robot.assignMotorPowers(1,1,0,0);
     sleep(750);
@@ -221,12 +228,14 @@ public class BlueFullAutonomous extends LinearOpMode {
   private class servoMove extends Thread
   {
     double distance;
+    int SLEEPMS;
     boolean grab;
-    public servoMove(double distanceTilActivation, boolean grabBlock)
+    public servoMove(double distanceTilActivation, boolean grabBlock, int sleepMs)
     {
       this.setName("servoThing");
       distance = distanceTilActivation;
       grab = grabBlock;
+      SLEEPMS = sleepMs;
     }
 
 
@@ -254,6 +263,11 @@ public class BlueFullAutonomous extends LinearOpMode {
             robot.driveLeftArm();
 
           }else{
+            try {
+              Thread.sleep(SLEEPMS);
+            } catch(InterruptedException e) {
+              System.out.println("got interrupted!: " + e);
+            }
             robot.leftReadyToGrab();
           }
           thing = true;

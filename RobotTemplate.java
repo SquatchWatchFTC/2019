@@ -271,7 +271,6 @@ int targetPosition = 0;
     public void autoInit(){
             autoGyroInit();
             getIntegratedZAxis();
-            storeLeftArm();
             dragServo.setPosition(0.3);
     }
 
@@ -286,12 +285,19 @@ int targetPosition = 0;
 
 public double tempAngleVar = 0;
 
-    public void robotDriveFunctions(NickPID pidObject, boolean slow){
+    public void robotDriveFunctions(NickPID pidObject, boolean slow, boolean redSide){
         
     if(true) { // Field-Centric-Mecanum
 
         double r = Math.hypot(autoOpMethods.gamepad1.left_stick_x, autoOpMethods.gamepad1.left_stick_y); // Trig magic
-        double robotAngle = Math.atan2(autoOpMethods.gamepad1.left_stick_y, -autoOpMethods.gamepad1.left_stick_x) - Math.PI / 4; // More trigonometry Magic
+        double robotAngle;
+        if(redSide){
+            robotAngle= Math.atan2(autoOpMethods.gamepad1.left_stick_y, autoOpMethods.gamepad1.left_stick_x) - Math.PI / 4; // More trigonometry Magic
+        }else{
+            robotAngle = Math.atan2(autoOpMethods.gamepad1.left_stick_y, -autoOpMethods.gamepad1.left_stick_x) - Math.PI / 4; // More trigonometry Magic
+
+        }
+
         autoOpMethods.telemetry.addData("atan thing: ", robotAngle);
         float rightStickX = autoOpMethods.gamepad1.right_stick_x;
         tempAngleVar += rightStickX*11;
@@ -306,6 +312,11 @@ public double tempAngleVar = 0;
             rearLeft = 0;
         }else if(autoOpMethods.gamepad1.dpad_right){
             rearRight = 0;
+        }
+
+        if(autoOpMethods.gamepad1.x){
+            storeRightArm();
+            storeLeftArm();
         }
 
         if(slow){
@@ -488,44 +499,7 @@ public double tempAngleVar = 0;
         resetEncoderWheels();
         assignMotorPowers(0, 0, 0, 0);
     }
-    public void autoMechanumSlideDistance(NickPID pidObject, boolean fieldCentric, double power, double thetaOfTravel, double thetaOfRotation, DistanceSensor distanceSensor, double targetDistance){
-        double distanceSensorValue;
 
-        if(Double.isNaN(distanceSensor.getDistance(DistanceUnit.INCH))){
-            distanceSensorValue = 10;
-        } else{
-            distanceSensorValue = distanceSensor.getDistance(DistanceUnit.INCH);
-        }
-
-        while(((distanceSensorValue > targetDistance+0.5) || (distanceSensorValue < targetDistance - 0.5) || (Math.abs(pidObject.deltaError) > 0.25)) && autoOpMethods.opModeIsActive()) {
-
-            if( Double.isNaN(distanceSensor.getDistance(DistanceUnit.INCH))){
-                distanceSensorValue = 10;
-            } else{
-                distanceSensorValue = distanceSensor.getDistance(DistanceUnit.INCH);
-            }
-
-            double magnitude = -pidObject.genericPID(targetDistance, distanceSensorValue, 0.7, 0, 0.1);; // Trig magic
-            double robotAngle = ((-thetaOfTravel-90)*Math.PI)/180 - Math.PI / 4; // More trigonometry Magic
-            double rightX = turnRobotTeleop(thetaOfRotation, pidObject, 1, 0.5)*0;
-
-            final double frontLeft = magnitude * Math.cos(robotAngle) + (rightX );
-            final double frontRight = magnitude * Math.sin(robotAngle) - (rightX );
-            final double rearLeft = magnitude * Math.sin(robotAngle) + (rightX );
-            final double rearRight = magnitude * Math.cos(robotAngle) - (rightX );
-
-            frontLeftMotorPower = frontLeft;
-            frontRightMotorPower = frontRight;
-            rearLeftMotorPower = rearLeft;
-            rearRightMotorPower = rearRight;
-
-
-            assignMotorPowers(frontLeftMotorPower, frontRightMotorPower, rearLeftMotorPower, rearRightMotorPower);
-        }
-        pidObject.resetValues();
-        resetEncoderWheels();
-        assignMotorPowers(0, 0, 0, 0);
-    }
     private double P, I, D = 0;
     //private double kP, kI, kD = 0;
     public double previousError = 0;
@@ -564,7 +538,7 @@ public double tempAngleVar = 0;
             averageEncoder = ((((8 * Math.PI) / 2400) * leftFront.getCurrentPosition() / 2) + ((8 * Math.PI) / 2400) * rightFront.getCurrentPosition() / 2) / 2;
 
 
-            double magnitude = pidObject.genericPID(inches, averageEncoder, kP, kD, 0.1); // Trig magic
+            double magnitude = pidObject.genericPID(inches, averageEncoder, kP,0.0, kD, 0.1); // Trig magic
 
             if (magnitude > 1) {
                 magnitude = 1;
@@ -608,7 +582,7 @@ public double tempAngleVar = 0;
             averageEncoder = ((((8 * Math.PI) / 2400) * leftFront.getCurrentPosition() / 2) + ((8 * Math.PI) / 2400) * rightFront.getCurrentPosition() / 2) / 2;
 
 
-            double magnitude = pidObject.genericPID(inches, averageEncoder, kP, kD, 0.1); // Trig magic
+            double magnitude = pidObject.genericPID(inches, averageEncoder, kP,0.0, kD, 0.1); // Trig magic
 
             if (magnitude > 1) {
                 magnitude = 1;
@@ -653,10 +627,10 @@ public double tempAngleVar = 0;
         if(inches < 0){
             forward = false;
         }
-        while ((((Math.abs(averageEncoder) < Math.abs(inches) - 0.5) || (Math.abs(averageEncoder) > Math.abs(inches) + 0.5)) || Math.abs(pidObject.deltaError) > 0.28) && autoOpMethods.opModeIsActive()) {
+        while ((((Math.abs(averageEncoder) < Math.abs(inches) - 0.125) || (Math.abs(averageEncoder) > Math.abs(inches) + 0.125)) || Math.abs(pidObject.deltaError) > 0.08) && autoOpMethods.opModeIsActive()) {
             averageEncoder = ((((8 * Math.PI) / 2400) * leftFront.getCurrentPosition() / 2) + ((8 * Math.PI) / 2400) * rightFront.getCurrentPosition() / 2) / 2;
 
-            double magnitude = pidObject.genericPID(inches, averageEncoder, kP, kD, 0.1); // Trig magic
+            double magnitude = pidObject.genericPID(inches, averageEncoder, kP, 0.0, kD, 0.09); // Trig magic
 
             if (magnitude > 1) {
                 magnitude = 1;
@@ -719,7 +693,7 @@ public double tempAngleVar = 0;
         while ((Math.abs(averageEncoder) < Math.abs(inches) - 0.5)  && autoOpMethods.opModeIsActive()) {
             averageEncoder = ((((8 * Math.PI) / 2400) * leftFront.getCurrentPosition() / 2) + ((8 * Math.PI) / 2400) * rightFront.getCurrentPosition() / 2) / 2;
 
-            double magnitude = pidObject.genericPID(inches, averageEncoder, kP, kD, 0.1); // Trig magic
+            double magnitude = pidObject.genericPID(inches, averageEncoder, kP, 0.0,kD, 0.1); // Trig magic
 
             if (magnitude > 1) {
                 magnitude = 1;
@@ -1107,15 +1081,21 @@ public double tempAngleVar = 0;
     public void leftReadyToGrab(){
         leftBlockArmGrab.setPosition(0);
         sleep(500);
-        leftBlockArm.setPosition(0);
+        leftBlockArm.setPosition(0.05);
 
     }
+    public void leftReadyToGrabExtend(){
+        leftBlockArmGrab.setPosition(0);
+        leftBlockArm.setPosition(0.1);
+
+    }
+
 
 
     public void leftReadyToDrop(){
 
         leftBlockArmGrab.setPosition(0.5);
-        leftBlockArm.setPosition(0);
+        leftBlockArm.setPosition(0.1);
     }
 
     public void leftDrop(){
@@ -1150,15 +1130,19 @@ public double tempAngleVar = 0;
     public void rightReadyToGrab(){
         rightBlockArmGrab.setPosition(0);
         sleep(500);
-        rightBlockArm.setPosition(0);
+        rightBlockArm.setPosition(0.05);
+    }
 
+    public void rightReadyToGrabExtend(){
+        rightBlockArmGrab.setPosition(0);
+        rightBlockArm.setPosition(0.1);
     }
 
 
     public void rightReadyToDrop(){
 
         rightBlockArmGrab.setPosition(0.5);
-        rightBlockArm.setPosition(0);
+        rightBlockArm.setPosition(0.1);
     }
 
     public void rightDrop(){
@@ -1282,10 +1266,10 @@ public double tempAngleVar = 0;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
-    public void turnRobotAutonomous(int targetAngle, int sleepTime, NickPID pidObject, double kP, double kD){ // This is an absolute position system. If you say 90 over and over, it'll not move. If you do 90, 180, 270, etc. itll move around in 90 degree increments
-        while(((integratedZAxis > -targetAngle+1) || (integratedZAxis < -targetAngle-1) || Math.abs(pidObject.deltaError) > 0.15) && autoOpMethods.opModeIsActive()){
+    public void turnRobotAutonomous(int targetAngle, int sleepTime, NickPID pidObject, double kP, double kD, double tolerance){ // This is an absolute position system. If you say 90 over and over, it'll not move. If you do 90, 180, 270, etc. itll move around in 90 degree increments
+        while(((integratedZAxis > -targetAngle+(tolerance/2)) || (integratedZAxis < -targetAngle-(tolerance/2)) || Math.abs(pidObject.deltaError) > 0.15) && autoOpMethods.opModeIsActive()){
             getIntegratedZAxis();
-            turnRobotPower(pidObject.genericPID(-targetAngle, integratedZAxis, kP,kD, 0.125-(initVoltage-13.2)/80));//original bias 0.115
+            turnRobotPower(pidObject.genericPID(-targetAngle, integratedZAxis, kP,10, kD , 0.115));//original bias 0.115
         }
         turnRobotPower(0);
         pidObject.resetValues();
@@ -1341,7 +1325,7 @@ public double tempAngleVar = 0;
 
             autoOpMethods.telemetry.addData("Color Value: ", ((double)leftColor.red()/(double)leftColor.green())); // value is above 0.7
             autoOpMethods.telemetry.addData("Color Value: ", ((double)rightColor.red()/(double)rightColor.green())>0.8); // value is above 0.7
-            autoOpMethods.telemetry.addData("plzhelp:   ", getBatteryVoltage());
+            autoOpMethods.telemetry.addData("plzhelp:   ", initVoltage);
             //autoOpMethods.telemetry.addData("newPos", blockPosition(pidObject, 8));
             autoOpMethods.telemetry.addData("Angle: ", integratedZAxis);
             autoOpMethods.telemetry.addData("ENCODER AVERAGE:     ", ((((8*Math.PI)/2400)*leftFront.getCurrentPosition()/2) + ((8*Math.PI)/2400)*rightFront.getCurrentPosition()/2)/2);
